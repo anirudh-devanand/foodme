@@ -19,6 +19,23 @@ def home():
     return render_template('index.html')
 
 
+class User:
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    password = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    items_by_user = db.relationship('Item', backref='owner', lazy=True)  # Relationship with Item model
+
+
+class Dish: 
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    item_name = db.Column(db.String(100), nullable=False)
+    item_description = db.Column(db.String(200), nullable=True)
+    expiry = db.Column(db.DateTime, nullable=True)
+    item_country = db.Column(db.String(100), nullable = True)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 
