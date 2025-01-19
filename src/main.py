@@ -628,6 +628,61 @@ def showList():
     
 #     return jsonify(dishes_list), 200
 
+@app.route('/searchFilter', methods=['POST'])
+@login_required
+def searchFilter():
+    # Get request data
+    data = request.json  # Assuming the request is JSON
+    username = data.get('username')
+    price = data.get('price')
+    country = data.get('country')
+    distance = data.get('distance')
+
+    query = {}
+
+    # Add filters based on price and country
+    if price:
+        query['price'] = {'$lte': price}
+    
+    if country:
+        query['country'] = country
+
+    # Retrieve the user's address
+    user = mongo.db.users.find_one({'username': username})
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    consumer_addr = user['address']  # Assume this is a valid address string
+
+    # Fetch dishes based on price and country filters
+    results = mongo.db.dishes.find(query)
+
+    filtered_results = []
+    for dish in results:
+        dish_address = dish.get('address')  # The address in the dish document
+
+        # Apply the distance filter if specified
+        if distance:
+            try:
+                # Assuming get_distance returns a numeric value for distance in kilometers
+                dish_distance = map.get_distance(consumer_addr, dish_address)
+
+                # Check if the calculated distance is within the specified limit
+                if dish_distance <= distance:
+                    filtered_results.append(dish)
+            except Exception as e:
+                print(f"Error calculating distance: {str(e)}")
+                continue  # Skip if there's an error with distance calculation
+        else:
+            # If no distance filter is applied, add the dish directly
+            filtered_results.append(dish)
+
+    # Return the filtered results as JSON
+    if filtered_results:
+        return jsonify(filtered_results), 200
+    else:
+        return jsonify({'message': 'No dishes found matching the filters.'}), 404
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
