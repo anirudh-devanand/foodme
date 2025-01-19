@@ -1,0 +1,78 @@
+/* Seller.css */
+
+.seller-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .seller-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  .seller-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .seller-form label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .seller-form input,
+  .seller-form textarea {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    resize: vertical;
+  }
+  
+  .seller-form input:focus,
+  .seller-form textarea:focus {
+    border-color: #007bff;
+  }
+  
+  .seller-form textarea {
+    min-height: 100px;
+  }
+  
+  .seller-form button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .seller-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .seller-form button:focus {
+    outline: none;
+  }
+
+/* below */
+
+
+  .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
