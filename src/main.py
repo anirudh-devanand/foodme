@@ -353,16 +353,16 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 # Registration Route
-@app.route('/regs', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    print("ayaa!!!!!!!!!")
-    return "ok"
-    # form = RegisterForm()
-    # if form.validate_on_submit():
-    #     hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash password before saving
-    #     new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data)
-    #     new_user.save()
-    #     return redirect(url_for('login'))
+    # return "ok"
+    form = RegisterForm()
+    if form.validate_on_submit():
+        print("ayaa2!!!!!!!!!")
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash password before saving
+        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data)
+        new_user.save()
+    return redirect(url_for('login')) # 
     # return render_template('register.html', form=form)
 
 # Login Route
