@@ -38,7 +38,6 @@ const LandingPage = () => {
                   end: "bottom 90%",
                   scrub: true,
                   pin: true,
-                  markers: true
               },
           });
 
@@ -172,30 +171,7 @@ const LandingPage = () => {
             );
         });
 
-        // let tl2 = gsap.timeline({
-        //     defaults: { duration: 5},
-        //     scrollTrigger: {
-        //         trigger: containerRef.current,
-        //         start: "bottom 90%",
-        //         end: "bottom 70%",
-        //         scrub: true,
-        //         pin: true,
-        //         markers: true
-        //     },
-        // });
-
-        // tl2.fromTo(
-        //     scrollerRef.current, 
-        //     {
-        //         opacity: 0, 
-        //         y: 100
-        //     }, 
-
-        //     {
-        //         y: 0,
-        //         opacity: 1
-        //     }
-        // );
+    
 
       });
       return () => ctx.revert();
