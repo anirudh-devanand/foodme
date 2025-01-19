@@ -33,6 +33,7 @@ const Nav = forwardRef((props, ref) => {
   
   return (
     <>
+    <div className="navWrapper">
     {currentUser ? (
       <div className="navContainer" ref={ref}>
         <Navlink to="/">Dashboard</Navlink>
@@ -46,6 +47,7 @@ const Nav = forwardRef((props, ref) => {
         <Navlink to="/auth">Login</Navlink>
       </div>
     )}
+    </div>
   </>
  
     

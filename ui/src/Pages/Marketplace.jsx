@@ -99,6 +99,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import Map from '../Components/Map/Map';
 import Cuisine from '../Components/Cuisines/Cuisines';
 import { marketPlaceData } from "../../api/api";
+import Nav from '../Components/Nav/Nav';
 
 const Marketplace = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
@@ -132,12 +133,13 @@ const Marketplace = () => {
   }, []);
 
   return (
+    <>
+       <Nav/>
     <div className="mainMarketplace">
       <div className="top">
         <input className="search" placeholder="Search For a Food Item" />
         <div className="filter" onClick={toggleFilters}>
-          <div><TuneIcon style={{ color: "black", margin: "0px" }} /></div>
-          <div>Filters</div>
+          <div><TuneIcon style={{ color: "white", margin: "0px" }} sx={{color: "white"}}/></div>
           {isFiltersOpen && (
             <div className="filterHiddenDiv">
               <h3>Filter Options</h3>
@@ -155,19 +157,26 @@ const Marketplace = () => {
               </div>
 
               <Cuisine />
-              <Map />
             </div>
           )}
         </div>
       </div>
 
         <div className="bottom">
-
+              <Cards name="Dev"
+                     description="This Is desc."
+                     country="Country" 
+                     price ="Price" 
+                     seller_name="Seller Name" 
+                     image = " " 
+                     _id />
 
           </div>
         
 
     </div>
+
+    </>
   );
 };
 

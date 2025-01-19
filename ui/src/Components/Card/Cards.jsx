@@ -51,13 +51,22 @@ import "./Cards.css";  // Make sure to import your custom CSS file
 import food from "../../assets/img1.png"; // Fallback image
 import { delItem } from "../../../api/api";
 import { Block } from "@mui/icons-material";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 // import React, { useState } from 'react';
 
 
 const Cards = (props) => {
   // Destructure the data prop
-  const { name, description, country, price, seller_name, image, _id } = props.data;
+  const { name, description, country, price, seller_name, image, _id } = props;
+
+  const [showComponent, setShowComponent] = useState(true);
+
+  const handleRemove = () => {
+    setShowComponent(false); // Set to false to remove the component
+  };
+
   // var isVisible = true; 
   const [isVisible, setIsVisible] = useState(true);
 
@@ -83,34 +92,47 @@ const Cards = (props) => {
       const toDel = { '_id': _id }; 
       const res = await delItem(toDel); // Make sure delItem is a valid function
       console.log(res.data);
-      // isVisible = false; 
-      // setIsVisible = false; 
+      handleRemove();
     } catch (error) {
       alert(error.response?.data?.message || "An error occurred");
     }
   };
   
+  const addToCart =() => {
+    alert("Item added to cart");
+  }
 
   return (
+<>
+    { showComponent && (
     <div className="card" style={{display: isVisible ? "block" : "none" }}>
       <div className="card-image">
-        <img src={image || food} alt={name} />
+        {/* <img src={image || food} alt={name}  /> */}
+        <img src={"/src/assets/img1.png"} />
+
       </div>
 
-      <button onClick={() => deleteItem(_id)}>Delete</button>
 
       <div className="card-details">
-        <h3 className="card-title">{name || "Untitled"}</h3>
+        <div className="topDiv">
+          <h3 className="card-title">{name || "Untitled"}</h3>
+          <DeleteForeverIcon style={{cursor: "pointer"}} onClick={() => deleteItem(_id)}/>
+        </div>
+      
         <p className="card-description">{description || "Not available"}</p>
         <div className="card-info">
           <p className="card-price">{price ? `$${price}` : "N/A"}</p>
-          <p className="card-country">{country || "Not specified"}</p>
+          <p className="card-country"><span>Cuisine Type: </span>{country || "Not specified"}</p>
         </div>
-        <p className="card-seller">{seller_name || "Not specified"}</p>
-        {/* <p className="card-seller">{_id || "Not specified"}</p> */}
+        <div className="card-seller">
+            <span>Sold By: {seller_name || "Not specified"}</span>
+            <ShoppingCartIcon style={{cursor: "pointer"}} onClick={() => addToCart()}/>
+        </div>
       </div>
     </div>
-
+   
+    )} 
+    </>
   );
 };
 

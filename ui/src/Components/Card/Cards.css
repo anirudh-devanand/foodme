@@ -1,4 +1,25 @@
-.main{
+
+
+@font-face {
+  font-family: "ASO";
+  src: url("/ui/src/assets/Fonts/ASO.ttf");
+}
+@font-face {
+  font-family: "Rosehot";
+  src: url("/ui/src/assets/Fonts/Rosehot.ttf") format("woff2"),
+       url("/ui/src/assets/Fonts/Rosehot.woff") format("woff"),
+       url("/ui/src/assets/Fonts/Rosehot.ttf") format("truetype");
+}
+
+h3{
+  font-family: "ASO" !important;
+}
+
+p{
+  font-family: "ASO" !important;
+}
+
+.card{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -12,6 +33,7 @@
 .main .img{
     width: 100%;
     overflow: hidden;
+    flex:2;
 }
 
 .img img {
@@ -24,6 +46,7 @@
 .main h3{
     margin: 0px;
     width: 100%;
+    font-size: 1.4rem;
 }
 
 .main p{
@@ -63,34 +86,46 @@
   
   /* Card details section */
   .card-details {
-    padding: 16px;
+    padding: 0px 5px;
   }
   
+  .topDiv{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+    margin-bottom: 5px; 
+    margin-top: 2px;
+  }
   /* Title of the card */
   .card-title {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: #333;
     margin-bottom: 8px;
+    font-weight: bold;
+    padding-left: 10px;
   }
   
   /* Description of the card */
   .card-description {
     font-size: 1rem;
     color: #666;
-    margin-bottom: 12px;
+    margin: 0px;
+    font-style: italic;
   }
   
   /* Information section (price and country) */
   .card-info {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 8px;
   }
   
   .card-price {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.4rem;
+    font-weight: 1000;
     color: #28a745; /* Green for price */
   }
   
@@ -101,8 +136,11 @@
   
   /* Seller's information */
   .card-seller {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: 0.9rem;
     color: #555;
-    font-style: italic;
+    margin-bottom: 5px;;
   }
   

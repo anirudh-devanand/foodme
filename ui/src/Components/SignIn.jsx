@@ -6,8 +6,6 @@ import Button from './Button'
 import {userSignIn }from "../../api/api"
 import {useDispatch} from "react-redux";
 import { loginSuccess } from '../Redux/Reducers/userSlice';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
-
 
 const Container = styled.div`
 display: flex;
@@ -22,7 +20,6 @@ font-color: white;
 const SignIn = () => {
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();  // Create a navigate function
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submit, setSubmit] = useState(true);
@@ -31,11 +28,11 @@ const SignIn = () => {
   const handleSignIn = async() => {
       await userSignIn({email, password, submit})
           .then((res) =>{
-              // console.log(res);
+              console.log(res);
               dispatch(loginSuccess(res.data));
-              // console.log(res.data);
-              // alert("Login Success");
-              navigate('/');
+              console.log(res.data);
+              alert("Login Success");
+              
           })  
           .catch((error) => {
               alert(error.response.data.message);
