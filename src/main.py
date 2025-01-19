@@ -236,8 +236,12 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 
 login_manager = LoginManager()
@@ -349,15 +353,17 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 # Registration Route
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/regs', methods=['POST'])
 def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash password before saving
-        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data)
-        new_user.save()
-        return redirect(url_for('login'))
-    return render_template('register.html', form=form)
+    print("ayaa!!!!!!!!!")
+    return "ok"
+    # form = RegisterForm()
+    # if form.validate_on_submit():
+    #     hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash password before saving
+    #     new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data)
+    #     new_user.save()
+    #     return redirect(url_for('login'))
+    # return render_template('register.html', form=form)
 
 # Login Route
 @app.route('/login', methods=['GET', 'POST'])
@@ -410,25 +416,25 @@ def addItem():
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
 
 
-# Seller adds/posts new dish
-@app.route('/addItem', methods=['POST'])
-@login_required
-def addItem():
-    data = request.get_json()
+# # Seller adds/posts new dish
+# @app.route('/addItem', methods=['POST'])
+# @login_required
+# def addItem():
+#     data = request.get_json()
 
-    item_name = data['itemData']['name']  # Extract the actual item name
-    item_country = data['itemData']['country']
-    user_id = current_user.id  # Use the logged-in user's ID
-    user_name = mongo.db.users.find_one({'id': user_id})    
+#     item_name = data['itemData']['name']  # Extract the actual item name
+#     item_country = data['itemData']['country']
+#     user_id = current_user.id  # Use the logged-in user's ID
+#     user_name = mongo.db.users.find_one({'id': user_id})    
 
-    if not item_name:
-        return jsonify({'error': 'Missing item name'}), 400
+#     if not item_name:
+#         return jsonify({'error': 'Missing item name'}), 400
 
-    expiry = datetime.now() + timedelta(hours=6)
-    new_dish = Dish(id=None, expiry=expiry, name=item_name, description='', price=0, seller_name=user_name, seller_id=user_id, country=item_country)
-    new_dish.save()
+#     expiry = datetime.now() + timedelta(hours=6)
+#     new_dish = Dish(id=None, expiry=expiry, name=item_name, description='', price=0, seller_name=user_name, seller_id=user_id, country=item_country)
+#     new_dish.save()
 
-    return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
+#     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
 
 
 
