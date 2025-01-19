@@ -223,7 +223,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_login import LoginManager, UserMixin, login_user, current_user, login_required
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, EmailField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -235,9 +235,11 @@ from bson import ObjectId
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-
+from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 
 login_manager = LoginManager()
@@ -303,6 +305,14 @@ class User(UserMixin):
             return cls(id=user['_id'], username=user['username'], email=user['email'], password=user['password'], fullname=user["fullname"])
         return None
     
+    @classmethod
+    def get_by_email(cls, email):
+        user = mongo.db.users.find_one({'email': email})
+        if user:
+            return cls(id=user['_id'], username=user['username'], email=user['email'], password=user['password'], fullname=user["fullname"])
+            # return cls(id=user['_id'], email=user['email'], password=user['password'], fullname=user["fullname"])
+        return None
+    
 # Load the user by user_id
 @login_manager.user_loader
 def load_user(id):
@@ -361,8 +371,9 @@ class RegisterForm(FlaskForm):
 
 # Login Form
 class LoginForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+    # username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+    email = EmailField(validators=[InputRequired(), Length(max=50)],render_kw={"placeholder": "Email"})
     submit = SubmitField('Login')
 
 # Registration Route
@@ -379,12 +390,18 @@ def register():
 # Login Route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("reached login")
     form = LoginForm()
-    if form.validate_on_submit():
-        user = User.get_by_username(form.username.data)
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user)
-            return redirect(url_for('dashboard'))
+    print(form.data)
+    print(form.email.data)
+    # if form.validate_on_submit():
+        # user = User.get_by_username(form.username.data)
+    user = User.get_by_email(form.email.data)
+    print(f"USER: {user}")
+    if user and bcrypt.check_password_hash(user.password, form.password.data):
+        print("reached login")
+        login_user(user)
+        return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
 # Logout Route
@@ -431,7 +448,7 @@ def updateItem():
     
     return jsonify({'message': 'Item updated successfully!', 'item': {'name': item_name, 'expiry': item_expiry}})
 
-@app.route('deleteItem', methods=['POST'])
+@app.route('/deleteItem', methods=['POST'])
 @login_required
 def deleteItem():
     data = request.get_json()
@@ -468,6 +485,20 @@ def addItem():
     new_dish.save()
 
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
+
+
+@app.route('/showList', methods=['GET'])
+@login_required
+def showList():
+    dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
+    dishes_list = []
+    
+    for dish in dishes:
+        # Serialize each dish to include its fields and convert ObjectId to string
+        dish['_id'] = str(dish['_id'])
+        dishes_list.append(dish)
+    
+    return jsonify(dishes_list), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
