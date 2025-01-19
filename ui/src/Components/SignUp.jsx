@@ -25,7 +25,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignUp = async() => {
-      await userSignUp({fullname, username, email, password, submit})
+      await userSignUp({fullname, username, email, password, address, submit})
           .then((res) =>{
               dispatch(loginSuccess(res.data));
               alert("Account Created Success");
@@ -40,6 +40,7 @@ const SignUp = () => {
   const [username, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
   const [submit, setSubmit] = useState(true);
 
   return (
@@ -71,6 +72,14 @@ const SignUp = () => {
             password
             value={password}
             handleChange={(e) => setPassword(e.target.value)}
+        />
+
+        <UserInput 
+            name="Address" 
+            Placeholder="Enter your address"
+            address
+            value={address}
+            handleChange={(e) => setAddress(e.target.value)}
         />
 
   <Button type = "submit" text="Sign Up"

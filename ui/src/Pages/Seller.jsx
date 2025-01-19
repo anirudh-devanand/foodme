@@ -15,8 +15,9 @@ const Seller = (props) => {
   const [description, setDescription] = useState('');
   const [country, setCountry] = useState('');
   const [price, setPrice] = useState('');
-  const [address, setAddress] = useState('');
-  const [image, setImage] = useState(null); // Add state for image
+  const [location, setLocation] = useState('');
+  const [image, setImage] = useState('');
+
   const [newListing, setNewListing] = useState(false);
 
   const [errors, setErrors] = useState({
@@ -24,16 +25,32 @@ const Seller = (props) => {
     description: '',
     country: '',
     price: '',
-    image: '',
-    address: ''
+    location: '',
+    image: ''
   });
+
+const TotalSales = [3632, 2342, 5000, 4530, 2432, 3901, 4235];
+const DailySales = [400, 235, 540, 430, 312, 421, 443];
+const volume = [15, 21, 23, 20, 22, 25, 26];
+const xLabels = [
+  'January',
+  'Febraury',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+];
+
+
+
 
   const handleSubmit = async () => {
 
     console.log(currentUser);
     // Check if all fields are filled, else set error messages
     console.log("USER: ", currentUser);
-    let formErrors = { name: '', description: '', country: '', price: '', image: '', address: '', currentUser: currentUser};
+    let formErrors = { name: '', description: '', country: '', price: '', currentUser: currentUser};
     let isValid = true;
 
     if (!name) {
@@ -52,12 +69,12 @@ const Seller = (props) => {
       formErrors.price = 'Price is required';
       isValid = false;
     }
-    if (!image) {  // Check if image is provided
-      formErrors.image = 'Food item image is required';
+    if (!location) {
+      formErrors.location = 'Location of pickup is required';
       isValid = false;
     }
-    if(!address) {
-      formErrors.address = "Address of pickup is required"
+    if (!image) {
+      formErrors.image = 'Image is required';
       isValid = false;
     }
 
@@ -65,7 +82,7 @@ const Seller = (props) => {
 
     if (isValid) {  
       // Prepare form data
-      const formData = { name, description, country, price, currentUser, image, address};
+      const formData = { name, description, country, price, currentUser, location, image, location};
 
 
       try {
@@ -420,6 +437,19 @@ const Seller = (props) => {
         </div>
 
         <div className="input-container">
+          <label htmlFor="location">Location for Pickup</label>
+          <input
+            type="text"
+            id="location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            required
+            placeholder="Enter location"
+          />
+          {errors.location && <p className="error">{errors.location}</p>}
+        </div>
+
+        <div className="input-container">
           <label htmlFor="image">Food Item Image</label>
           <input
             type="file"
@@ -429,19 +459,6 @@ const Seller = (props) => {
             required
           />
           {errors.image && <p className="error">{errors.image}</p>}
-        </div>
-
-        <div className="input-container">
-          <label htmlFor="address">Address for Pickup</label>
-          <input
-            type="text"
-            id="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-            placeholder="Enter Address"
-          />
-          {errors.name && <p className="error">{errors.address}</p>}
         </div>
 
         <button type="button" onClick={handleSubmit}>
