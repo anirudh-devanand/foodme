@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import UserInput from './UserInput';
-import useDispatch from "../Redux/Reducers/userSlice"
+import useDispatch from "../Redux/Reducers/userSlice";
+import userSignUp from "../../api/api.js"
+
 
 const Container = styled.div`
 display: flex;
