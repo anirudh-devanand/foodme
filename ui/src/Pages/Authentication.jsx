@@ -47,7 +47,7 @@ height: 90%;
 
 const Text = styled.div`
 font-size: 16px;
-color: white;
+color: blue;
 text-align: center;
 margin-top: 16px;
 @media (max-width: 400px) {
@@ -56,7 +56,7 @@ font-size: 14px;
 `;
 
 const TextButton = styled.span`
-color: white;
+color: blue;
 cursor: pointer;
 transition: all 0.3s ease;
 font-weight: 600;`;

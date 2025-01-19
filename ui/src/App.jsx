@@ -3,6 +3,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css';
 import Authentication from './Pages/Authentication.jsx';
+import LandingPage from "./Pages/LandingPage.jsx"; 
+import Marketplace from './Pages/Marketplace.jsx';
 
 
 function App() {
@@ -10,7 +12,7 @@ function App() {
 
   return (
     <>
-      <Authentication/>
+      <LandingPage/>
     </>
   )
 }

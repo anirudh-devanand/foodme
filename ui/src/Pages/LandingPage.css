@@ -1,0 +1,95 @@
+
+
+@font-face {
+  font-family: 'midnight';
+  src: url("Midnight.ttf");
+}
+
+
+html, body{
+  background-color: black;
+}
+
+h1{
+  font-family: 'midnight';
+  font-size: 15vw;
+  width: 100vw;
+  text-align: center;
+  position: absolute;
+  z-index: 2;
+}
+
+.bgImg{
+  height: 100%;
+  width: 70%;
+  margin: 0;
+  position: relative;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* clip-path: polygon(37.5% 20%, 62.5% 20%, 62.5% 80%, 37.5% 80%); */
+}
+
+.bgImg img{
+  height: 100%;
+  width: 100%;
+  object-fit: contain; 
+}
+
+.text{
+  color: #eae4e2;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.parallax{
+  overflow: hidden;
+}
+
+.nav {
+  position: fixed;
+  top: 20px;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: rgba(255, 255, 255, 0); /* Optional: Slight transparency */
+  z-index: 1000;
+  opacity: 0;
+  transition: transform 0.5s ease-in-out; /* Smooth hide/show */
+}
+
+
+.container {
+  height: 110vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.secondaryImg{
+  width: 40%;
+  height: 50%;
+  opacity: 1;
+  overflow: hidden;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  opacity: 0;
+}
+
+.secondaryImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; 
+}
+
+
+
