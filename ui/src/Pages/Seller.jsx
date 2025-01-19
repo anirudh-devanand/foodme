@@ -3,7 +3,6 @@ import './Seller.css';
 import {addItem} from "../../api/api";
 import { useSelector } from 'react-redux';
 
-import { useSelector } from 'react-redux';
 import { current } from '@reduxjs/toolkit';
 
 const Seller = (props) => {

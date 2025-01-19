@@ -9,9 +9,6 @@ import Seller from "./Pages/Seller.jsx";
 import { Provider } from 'react-redux';
 import {store} from './Redux/Store.js';
 
-import { Provider } from 'react-redux';
-import { store } from './Redux/Store.js';
-import { Sell } from '@mui/icons-material';
 
 function App() {
   //const {currentUser} = useSelector((state) => state.user);

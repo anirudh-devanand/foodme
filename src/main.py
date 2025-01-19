@@ -508,6 +508,52 @@ def deleteItem():
 
     return jsonify({'message': 'Item deleted successfully!', 'item': {'name': item_name, '_id': item_id}})
 
+# # Seller adds/posts new dish
+# @app.route('/addItem', methods=['POST'])
+# # @login_required
+# def addItem():
+#     print("IN HERE!!!!!!!!!")
+#     # print(f"Logged in: {current_user.id}")
+#     data = request.get_json()
+
+#     print(data)
+
+#     print(f"User: {data['currentUser']}")
+
+#     item_name = data['name']  # Extract the actual item name
+#     item_country = data['country']
+#     item_descr = data['description']
+#     item_price = data['price']
+#     user_name = data['currentUser']; 
+
+#     # user_id = currentUser.id  # Use the logged-in user's ID
+#     user_id = mongo.db.users.find_one({'username': user_name})    
+
+#     # if not item_name:
+#     #     return jsonify({'error': 'Missing item name'}), 400
+
+#     expiry = datetime.now() + timedelta(hours=6)
+#     new_dish = Dish(id=None, expiry=expiry, name=item_name, description= item_descr, price= item_price, seller_name=user_name, seller_id=user_id, country=item_country)
+#     new_dish.save()
+#     # print(f"Dish saved: {new_dish}")
+
+#     # return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
+
+
+# @app.route('/marketplace', methods=['GET'])
+# # @login_required
+# def showList():
+#     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
+#     dishes_list = []
+    
+#     for dish in dishes:
+#         # Serialize each dish to include its fields and convert ObjectId to string
+#         dish['_id'] = str(dish['_id'])
+#         dishes_list.append(dish)
+    
+#     return jsonify(dishes_list), 200
+
+
 # Seller adds/posts new dish
 @app.route('/addItem', methods=['POST'])
 # @login_required
@@ -524,10 +570,10 @@ def addItem():
     item_country = data['country']
     item_descr = data['description']
     item_price = data['price']
-    user_name = data['currentUser']; 
+    user_name = data['currentUser']["username"]; 
 
     # user_id = currentUser.id  # Use the logged-in user's ID
-    user_id = mongo.db.users.find_one({'username': user_name})    
+    user_id = mongo.db.users.find_one({'username': user_name})["_id"]   
 
     # if not item_name:
     #     return jsonify({'error': 'Missing item name'}), 400
@@ -539,19 +585,49 @@ def addItem():
 
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
 
+# Helper function to recursively convert ObjectId to string in the document
+def convert_objectid(obj):
+    if isinstance(obj, ObjectId):
+        return str(obj)
+    elif isinstance(obj, dict):
+        return {key: convert_objectid(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_objectid(item) for item in obj]
+    return obj
 
 @app.route('/marketplace', methods=['GET'])
-@login_required
+# @login_required
 def showList():
     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
     dishes_list = []
-    
+
     for dish in dishes:
-        # Serialize each dish to include its fields and convert ObjectId to string
-        dish['_id'] = str(dish['_id'])
+        # Recursively convert any ObjectId to string in the dish document
+        dish = convert_objectid(dish)
         dishes_list.append(dish)
     
+    # for dish in dishes:
+    #     dish["seller_name"] = dish["seller_name"]["username"]
+    
+    print(f"PRINT: {dishes_list[0]}")
+    
     return jsonify(dishes_list), 200
+
+
+# def showList():
+#     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
+#     dishes_list = []
+    
+#     for dish in dishes:
+#         # Serialize each dish to include its fields and convert ObjectId to string
+#         dish['_id'] = str(dish['_id'])
+#         dishes_list.append(dish)
+
+    
+#     print(f"DISHES: {dishes_list}")
+    
+#     return jsonify(dishes_list), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
