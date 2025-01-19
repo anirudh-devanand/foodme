@@ -46,19 +46,58 @@
 // export default Cards;
 
 
-import React from "react";
+import React, { useState } from "react";
 import "./Cards.css";  // Make sure to import your custom CSS file
 import food from "../../assets/img1.png"; // Fallback image
+import { delItem } from "../../../api/api";
+import { Block } from "@mui/icons-material";
+
+// import React, { useState } from 'react';
+
 
 const Cards = (props) => {
   // Destructure the data prop
-  const { name, description, country, price, seller_name, image } = props.data;
+  const { name, description, country, price, seller_name, image, _id } = props.data;
+  // var isVisible = true; 
+  const [isVisible, setIsVisible] = useState(true);
+
+  // function deleteItem(){
+  //   // MAKE POST REQUEST TO /deleteItem
+  // }
+
+  // const deleteItem = async () => {
+  //     try {
+  //       // NEED TO SEND currUser as 
+  //       console.log("SENDING DELETE"); 
+  //       const toDel = {'_id': _id}; 
+  //       const res = await delItem(toDel); // Fetch data
+  //       console.log(res.data);
+  //     } catch (error) {
+  //       alert(error.response?.data?.message || "An error occurred");
+  //     }
+  //   };
+
+  const deleteItem = async (_id) => {
+    try {
+      console.log("SENDING DELETE"); 
+      const toDel = { '_id': _id }; 
+      const res = await delItem(toDel); // Make sure delItem is a valid function
+      console.log(res.data);
+      // isVisible = false; 
+      // setIsVisible = false; 
+    } catch (error) {
+      alert(error.response?.data?.message || "An error occurred");
+    }
+  };
+  
 
   return (
-    <div className="card">
+    <div className="card" style={{display: isVisible ? "block" : "none" }}>
       <div className="card-image">
         <img src={image || food} alt={name} />
       </div>
+
+      <button onClick={() => deleteItem(_id)}>Delete</button>
 
       <div className="card-details">
         <h3 className="card-title">{name || "Untitled"}</h3>
@@ -68,8 +107,10 @@ const Cards = (props) => {
           <p className="card-country">{country || "Not specified"}</p>
         </div>
         <p className="card-seller">{seller_name || "Not specified"}</p>
+        {/* <p className="card-seller">{_id || "Not specified"}</p> */}
       </div>
     </div>
+
   );
 };
 
