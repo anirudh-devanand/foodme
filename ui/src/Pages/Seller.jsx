@@ -12,12 +12,15 @@ const Seller = (props) => {
   const [description, setDescription] = useState('');
   const [country, setCountry] = useState('');
   const [price, setPrice] = useState('');
-
+  const [address, setAddress] = useState('');
+  const [image, setImage] = useState(null); // Add state for image
   const [errors, setErrors] = useState({
     name: '',
     description: '',
     country: '',
-    price: ''
+    price: '',
+    image: '',
+    address: ''
   });
 
   const handleSubmit = async () => {
@@ -25,7 +28,7 @@ const Seller = (props) => {
     console.log(currentUser);
     // Check if all fields are filled, else set error messages
     console.log("USER: ", currentUser);
-    let formErrors = { name: '', description: '', country: '', price: '', currentUser: currentUser};
+    let formErrors = { name: '', description: '', country: '', price: '', image: '', address: '', currentUser: currentUser};
     let isValid = true;
 
     if (!name) {
@@ -44,12 +47,20 @@ const Seller = (props) => {
       formErrors.price = 'Price is required';
       isValid = false;
     }
+    if (!image) {  // Check if image is provided
+      formErrors.image = 'Food item image is required';
+      isValid = false;
+    }
+    if(!address) {
+      formErrors.address = "Address of pickup is required"
+      isValid = false;
+    }
 
     setErrors(formErrors); // Set the error messages
 
     if (isValid) {  
       // Prepare form data
-      const formData = { name, description, country, price, currentUser};
+      const formData = { name, description, country, price, currentUser, image, address};
 
 
       try {
@@ -81,6 +92,10 @@ const Seller = (props) => {
       //   console.error('Error sending data:', error);
       // }
     }
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]); // Store the uploaded image
   };
 
   const handleKeyPress = (e) => {
@@ -395,6 +410,31 @@ const Seller = (props) => {
             placeholder="$"
           />
           {errors.price && <p className="error">{errors.price}</p>}
+        </div>
+
+        <div className="input-container">
+          <label htmlFor="image">Food Item Image</label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            onChange={handleImageChange}
+            required
+          />
+          {errors.image && <p className="error">{errors.image}</p>}
+        </div>
+
+        <div className="input-container">
+          <label htmlFor="address">Address for Pickup</label>
+          <input
+            type="text"
+            id="address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            required
+            placeholder="Enter Address"
+          />
+          {errors.name && <p className="error">{errors.address}</p>}
         </div>
 
         <button type="button" onClick={handleSubmit}>

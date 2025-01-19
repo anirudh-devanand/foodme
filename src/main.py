@@ -290,13 +290,15 @@ except Exception as e:
 
 
 class User(UserMixin):
-    def __init__(self, id, fullname, username, email, password):
+    def __init__(self, id, fullname, username, email, password, address):
         # MongoDB provides _id, but we can use it as id in our class
         self.id = str(id)  # Store the MongoDB _id as string, which is usually in ObjectId format
         self.fullname = fullname
         self.username = username
         self.email = email
         self.password = password
+        self.address = address
+        
         
         
     def save(self):
@@ -304,7 +306,8 @@ class User(UserMixin):
             'username': self.username,
             'email': self.email,
             'password': self.password,
-            'fullname': self.fullname
+            'fullname': self.fullname,
+            "address": self.address
         }
         # MongoDB will automatically assign an _id when inserting the document
         result = mongo.db.users.insert_one(user)
@@ -317,7 +320,7 @@ class User(UserMixin):
         # Use ObjectId to fetch the user by MongoDB's _id
         user_data = mongo.db.users.find_one({"_id": ObjectId(id)})
         if user_data:
-            return User(user_data["_id"], user_data["username"], user_data["email"], user_data["password"], user_data["fullname"])
+            return User(user_data["_id"], user_data["username"], user_data["address"],user_data["email"], user_data["password"], user_data["fullname"])
         return None
     
 
@@ -328,14 +331,14 @@ class User(UserMixin):
     def get_by_username(cls, username):
         user = mongo.db.users.find_one({'username': username})
         if user:
-            return cls(id=user['_id'], username=user['username'], email=user['email'], password=user['password'], fullname=user["fullname"])
+            return cls(id=user['_id'], username=user['username'], address=user["address"], email=user['email'], password=user['password'], fullname=user["fullname"])
         return None
     
     @classmethod
     def get_by_email(cls, email):
         user = mongo.db.users.find_one({'email': email})
         if user:
-            return cls(id=user['_id'], username=user['username'], email=user['email'], password=user['password'], fullname=user["fullname"])
+            return cls(id=user['_id'], username=user['username'], email=user['email'],address=user["address"], password=user['password'], fullname=user["fullname"])
             # return cls(id=user['_id'], email=user['email'], password=user['password'], fullname=user["fullname"])
         return None
     
@@ -345,6 +348,8 @@ class User(UserMixin):
             'fullname': self.fullname,
             'username': self.username,
             'email': self.email,
+            'address': self.address,
+            'image': self.image
         }
     
 
@@ -356,7 +361,7 @@ def load_user(id):
 
 # Dish class
 class Dish:
-    def __init__(self, id, expiry, name, description, price, seller_id, country, seller_name):
+    def __init__(self, id, expiry, name, description, price, seller_id, country, seller_name, location, image):
         self.id = str(id) 
         self.expiry = expiry
         self.name = name
@@ -365,6 +370,8 @@ class Dish:
         self.seller_id = seller_id
         self.country = country
         self.seller_name = seller_name
+        self.location = location
+        self.image = image
 
     def save(self):
         dish = {
@@ -374,7 +381,9 @@ class Dish:
             'seller_id': self.seller_id,
             'expiry': self.expiry,
             'country': self.country,
-            'seller_name': self.seller_name
+            'seller_name': self.seller_name,
+            'location': self.location,
+            "image": self.image
         }
         # MongoDB will automatically assign an _id when inserting the document
         result = mongo.db.dishes.insert_one(dish)
@@ -386,7 +395,7 @@ class Dish:
         # Use ObjectId to fetch the user by MongoDB's _id
             item_data = mongo.db.dishes.find_one({"_id": ObjectId(id)})
             if item_data:
-                return Dish(item_data["_id"], item_data["name"], item_data["description"], item_data["price"], item_data["expiry"],item_data["seller_id"],item_data["seller_name"],item_data["country"] )
+                return Dish(item_data["_id"], item_data["name"], item_data["image"], item_data["location"], item_data["description"], item_data["price"], item_data["expiry"],item_data["seller_id"],item_data["seller_name"],item_data["country"] )
             return None
         
         def get_id(self):
@@ -397,7 +406,9 @@ class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
     fullname = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Jane Doe"})
     password = PasswordField(validators=[InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-    email = StringField(validators=[InputRequired(), Length(min=8, max=100)], render_kw={"placeholder": "Email"})
+    email = StringField(validators=[InputRequired(), Length(min=8, max=100)], render_kw={"placeholder": "jane.doe@email.com"})
+    address = StringField(validators=[InputRequired(), Length(min=8, max=100)], render_kw={"placeholder": "2205 Lower Mall, V6T 0A5"})
+    
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -466,29 +477,29 @@ def home():
     return render_template('index.html')
 
 # Seller adds/posts new dish
-@app.route('/updateItem', methods=['POST'])
-@login_required
-def updateItem():
-    data = request.get_json()
+# @app.route('/updateItem', methods=['POST'])
+# @login_required
+# def updateItem():
+#     data = request.get_json()
 
-    item_name = data['itemData']['name']  # Extract the actual item name
-    item_country = data['itemData']['country']
-    item_description = data['itemData']['description']
-    item_price = data['itemData']['price']
-    item_id = data['itemData']['id']
-    item_expiry = data['itemData']['expiry']
+#     item_name = data['itemData']['name']  # Extract the actual item name
+#     item_country = data['itemData']['country']
+#     item_description = data['itemData']['description']
+#     item_price = data['itemData']['price']
+#     item_id = data['itemData']['id']
+#     item_expiry = data['itemData']['expiry']
 
-    if not item_name:
-        return jsonify({'error': 'Missing item name'}), 400
+#     if not item_name:
+#         return jsonify({'error': 'Missing item name'}), 400
     
 
-    mongo.db.dishes.update_one({'_id' : item_id},{"$set":{'name': item_name,
-            'description': item_description,
-            'price': item_price,
-            'expiry': item_expiry,
-            'country': item_country,}})
+#     mongo.db.dishes.update_one({'_id' : item_id},{"$set":{'name': item_name,
+#             'description': item_description,
+#             'price': item_price,
+#             'expiry': item_expiry,
+#             'country': item_country,}})
     
-    return jsonify({'message': 'Item updated successfully!', 'item': {'name': item_name, 'expiry': item_expiry}})
+#     return jsonify({'message': 'Item updated successfully!', 'item': {'name': item_name, 'expiry': item_expiry}})
 
 @app.route('/deleteItem', methods=['POST'])
 @login_required
@@ -570,6 +581,8 @@ def addItem():
     item_country = data['country']
     item_descr = data['description']
     item_price = data['price']
+    item_image = data['image']
+    item_location = data['location']
     user_name = data['currentUser']["username"]; 
 
     # user_id = currentUser.id  # Use the logged-in user's ID
@@ -579,7 +592,7 @@ def addItem():
     #     return jsonify({'error': 'Missing item name'}), 400
 
     expiry = datetime.now() + timedelta(hours=6)
-    new_dish = Dish(id=None, expiry=expiry, name=item_name, description= item_descr, price= item_price, seller_name=user_name, seller_id=user_id, country=item_country)
+    new_dish = Dish(id=None, expiry=expiry, location=item_location, image=item_image, name=item_name, description= item_descr, price= item_price, seller_name=user_name, seller_id=user_id, country=item_country)
     new_dish.save()
     print(f"Dish saved: {new_dish}")
 
