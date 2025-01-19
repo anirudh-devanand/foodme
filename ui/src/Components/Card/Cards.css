@@ -20,7 +20,7 @@ p{
 }
 
 .card{
-    min-width: 400px;
+    min-width: 350px;
     display: flex;
     flex-direction: column;
     justify-content: center;

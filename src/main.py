@@ -246,8 +246,8 @@ from gridfs import GridFS
 
 
 app = Flask(__name__)
-# CORS(app)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app)
+# CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 
@@ -259,6 +259,8 @@ login_manager.login_view = "login"  # Optional: specify login route
 
 
 
+
+global_user = None
 # login_manager.login_view = 'login'  # Replace 'login' with the route name of your login view
 
 
@@ -364,7 +366,7 @@ def load_user(id):
 
 # Dish class
 class Dish:
-    def __init__(self, id, expiry, name, description, price, seller_id, country, seller_name, location, image):
+    def __init__(self, id, expiry, name, description, price, seller_id, country, seller_name, location):
         self.id = str(id) 
         self.expiry = expiry
         self.name = name
@@ -374,7 +376,7 @@ class Dish:
         self.country = country
         self.seller_name = seller_name
         self.location = location
-        self.image = image
+        # self.image = image
 
     def save(self):
         dish = {
@@ -385,8 +387,7 @@ class Dish:
             'expiry': self.expiry,
             'country': self.country,
             'seller_name': self.seller_name,
-            'location': self.location,
-            "image": self.image
+            'location': self.location
         }
         # MongoDB will automatically assign an _id when inserting the document
         result = mongo.db.dishes.insert_one(dish)
@@ -397,10 +398,10 @@ class Dish:
         def get(id):
             item_data = mongo.db.dishes.find_one({"_id": ObjectId(id)})
             if item_data:
-                image_id = item_data.get('image')
-                image = None
-                if image_id:
-                    image = fs.get(image_id).read()  # Retrieve image from GridFS
+                # image_id = item_data.get('image')
+                # image = None
+                # if image_id:
+                #     image = fs.get(image_id).read()  # Retrieve image from GridFS
                 return Dish(item_data["_id"], item_data["name"], item_data["expiry"], item_data["description"], item_data["price"], item_data["seller_id"], item_data["country"], item_data["seller_name"], item_data["location"], image)
             return None
         
@@ -460,6 +461,7 @@ def login():
             login_user(user)
             print(current_user.id)
             token = "loggedIn"; 
+            global_user = user
             return jsonify({"token": token, "user": user.to_dict()})
     return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -595,13 +597,13 @@ def addItem():
     user_name = data['currentUser']['username']
     
     # # Retrieve the image file from the request
-    image = request.files.get('image')  # Assume image is sent as part of form-data
-    image_data = image.read() if image else None
+    # image = request.files.get('image')  # Assume image is sent as part of form-data
+    # image_data = image.read() if image else None
 
     user_id = mongo.db.users.find_one({'username': user_name})["_id"]
 
     expiry = datetime.now() + timedelta(hours=6)
-    new_dish = Dish(id=None, expiry=expiry, location=item_location, image=image_data, name=item_name, description=item_descr, price=item_price, seller_name=user_name, seller_id=user_id, country=item_country)
+    new_dish = Dish(id=None, expiry=expiry, location=item_location, name=item_name, description=item_descr, price=item_price, seller_name=user_name, seller_id=user_id, country=item_country)
     new_dish.save()
 
     print(f"Dish saved: {new_dish}")
@@ -723,6 +725,38 @@ def searchFilter():
         return jsonify(filtered_results), 200
     else:
         return jsonify({'message': 'No dishes found matching the filters.'}), 404
+    
+@app.route('/sellerList', methods=['GET', 'POST'])
+def sellerList():
+    print("REACHED HERE!!!!!!")
+    data = request.get_json()
+    print(data)
+    username = data['username']
+    user = mongo.db.users.find_one({'username': username})
+    print(f"USER IS: {user}")
+    dishes_list = []
+    dishes = mongo.db.dishes.find({'seller_id': ObjectId(user["_id"])})
+    print(f"DISHES IS: {dishes}")
+
+    for dish in dishes:
+        # Serialize each dish to include its fields and convert ObjectId to string
+        dish['_id'] = str(dish['_id'])
+        # Recursively convert any ObjectId to string in the dish document
+        dish = convert_objectid(dish)
+        dishes_list.append(dish)
+
+    
+
+    # for dish in dishes:
+    #     dish["seller_name"] = dish["seller_name"]["username"]
+    
+    print(f"PRINT: {dishes_list}")
+    
+    return jsonify(dishes_list), 200
+
+
+
+
 
 
 if __name__ == '__main__':

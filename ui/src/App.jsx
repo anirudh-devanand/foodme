@@ -19,13 +19,13 @@ function App() {
     <>
   <Provider store={store}>
     <BrowserRouter>
-       {{currentUser} ? 
+       {currentUser ? 
               (
                 <Routes>
                     <Route path="/" exact element = {<LandingPage/>}/>
                     <Route path="/auth" exact element = {<Authentication/>}/>
                     <Route path="/marketplace" exact element = {<Marketplace/>}/>
-                    <Route path="/seller" exact element = {<Seller user = {currentUser}/>}/>
+                    <Route path="/seller" exact element = {<Seller user={currentUser}/>}/>
                 </Routes>
               )
               :

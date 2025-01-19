@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Seller.css';
 import {addItem} from "../../api/api";
 import { useSelector } from 'react-redux';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
+
+import Cards from '../Components/Card/Cards';
 
 import Nav from '../Components/Nav/Nav';
 
@@ -12,15 +14,21 @@ import { LineChart } from '@mui/x-charts';
 import { current } from '@reduxjs/toolkit';
 
 
+import { sellerList } from '../../api/api';
+import { Provider } from 'react-redux';
+import {store} from '../Redux/Store';
 
-const Seller = (props) => {
+
+const Seller = ({user}) => {
+
+  console.log(user);
+  // const {user1} = props;
   const {currentUser} = useSelector((state) => state.user);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [country, setCountry] = useState('');
   const [price, setPrice] = useState('');
   const [location, setLocation] = useState('');
-  const [image, setImage] = useState('');
 
   const [newListing, setNewListing] = useState(false);
 
@@ -30,7 +38,6 @@ const Seller = (props) => {
     country: '',
     price: '',
     location: '',
-    image: ''
   });
 
 const TotalSales = [3632, 2342, 5000, 4530, 2432, 3901, 4235];
@@ -77,30 +84,22 @@ const xLabels = [
       formErrors.location = 'Location of pickup is required';
       isValid = false;
     }
-    if (!image) {
-      formErrors.image = 'Image is required';
-      isValid = false;
-    }
+
 
     setErrors(formErrors); // Set the error messages
 
     if (isValid) {  
-      // Prepare form data
-
-      const payload = {
-        name: file.name,
-        contentType: file.type,
-        data: Array.from(new Uint8Array(binaryData)), // Convert ArrayBuffer to Array
-      };
-  
-      
-      const formData = { name, description, country, price, currentUser, image, location, payload};
+      // Prepare form data      
+      const formData = { name, description, country, price, currentUser, location};
 
 
       try {
         console.log("form: " , formData);
+        console.log("RUNNING"); 
+
         await addItem(formData)
         .then((res) => {
+          console.log("RUNNING2"); 
           console.log(res);
         })
       } catch (error) {
@@ -142,6 +141,23 @@ const xLabels = [
       handleSubmit();
     }
   };
+
+
+  const [dishes, setDishes] = useState([]);
+  
+  const getSellerList = async() => {
+    // console.log(user1);
+    console.log("User is: ", user)
+    await sellerList(currentUser)
+    .then((res) => {
+      console.log(res.data); 
+      setDishes(res.data); 
+    })
+  }
+  
+  useEffect(() => {
+    getSellerList(); 
+  },[]);
 
   return (
 
@@ -546,7 +562,7 @@ const xLabels = [
           {errors.image && <p className="error">{errors.image}</p>}
         </div> */}
 
-<div
+{/* <div
   className="input-container"
   style={{
     marginBottom: '1.5rem',
@@ -599,7 +615,7 @@ const xLabels = [
       {errors.image}
     </p>
   )}
-</div>
+</div> */}
 
 
         <button type="button" onClick={handleSubmit}>
@@ -663,6 +679,8 @@ const xLabels = [
         <div className="currentListings">
           <FormatListNumberedOutlinedIcon/>
           <h3>Your Current Listings</h3>
+
+
         </div>
         <h3 className='createListing' onClick={() => setNewListing(!newListing)}>
           <AddCircleOutlinedIcon/>
@@ -671,6 +689,22 @@ const xLabels = [
       </div>
 
       <div className="bottom">
+      {dishes.length === 0 ? (
+            <p>Loading marketplace items...</p>
+          ) : (
+            dishes.map(item => (
+              <Cards
+                key={item._id}
+                name={item.name}
+                description={item.description}
+                country={item.country}
+                price={item.price}
+                seller_name={item.seller_name}
+                image={item.image}
+                _id={item._id}
+              />
+            ))
+          )}
 
       </div>
 

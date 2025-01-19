@@ -200,6 +200,16 @@
     background-color: rgb(68, 33, 241); /* Slightly lighter orange */
     scale: 1.2; /* Change text color for contrast */
     cursor: pointer;
+  }
+
+  .sellerListings{
+    min-height: 50%;
+  background-color: rgba(12, 12, 12, 0.91);
+
+  }
+
+  .bottom{
+  background-color: rgba(12, 12, 12, 0.91);
 
   }
   

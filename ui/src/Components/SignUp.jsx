@@ -6,6 +6,11 @@ import {userSignUp }from "../../api/api";
 import {useDispatch} from "react-redux";
 import { loginSuccess } from '../Redux/Reducers/userSlice';
 
+import { useNavigate } from 'react-router-dom';
+
+// import Authentication from '../Pages/Authentication';
+
+import LandingPage from '../Pages/LandingPage';
 
 
 const Container = styled.div`
@@ -24,11 +29,16 @@ const SignUp = () => {
 
   const dispatch = useDispatch();
 
+    const navigate = useNavigate();
+  
+
   const handleSignUp = async() => {
       await userSignUp({fullname, username, email, password, address, submit})
           .then((res) =>{
               dispatch(loginSuccess(res.data));
-              alert("Account Created Success");
+            //   alert("Account Created Success");
+              navigate('/');
+
           })
           .catch((error) =>{
               alert(error.response.data.message);
@@ -77,7 +87,7 @@ const SignUp = () => {
         <UserInput 
             name="Address" 
             Placeholder="Enter your address"
-            address
+            // address
             value={address}
             handleChange={(e) => setAddress(e.target.value)}
         />

@@ -98,6 +98,8 @@ import Cuisine from '../Components/Cuisines/Cuisines';
 import { marketPlaceData } from "../../api/api";
 import Nav from '../Components/Nav/Nav';
 
+import { sellerList } from '../../api/api';
+
 const Marketplace = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [price, setPrice] = useState(50); // Initial value of the slider
