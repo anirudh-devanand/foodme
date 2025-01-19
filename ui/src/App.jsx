@@ -6,18 +6,30 @@ import Authentication from './Pages/Authentication.jsx';
 import LandingPage from "./Pages/LandingPage.jsx"; 
 import Marketplace from './Pages/Marketplace.jsx';
 import Seller from "./Pages/Seller.jsx";
+import { Provider } from 'react-redux';
+import {store} from './Redux/Store.js';
 
 import { Provider } from 'react-redux';
 import { store } from './Redux/Store.js';
 import { Sell } from '@mui/icons-material';
 
 function App() {
+<<<<<<< HEAD
   const {currentUser} = useSelector((state) => state.user);
   console.log("printing", currentUser);
   // // const [currentUser, setCurrentUser] = useState(false);
 
   return (
     
+=======
+  //const {currentUser} = useSelector((state) => state.user);
+   const [currentUser, setCurrentUser] = useState(true);
+   const curr =  useSelector((state) => state.user);
+  console.log(curr);
+  return (
+    <>
+  <Provider store={store}>
+>>>>>>> 4f75835 (Frontend)
     <BrowserRouter>
        {{currentUser} ? 
               (
@@ -37,7 +49,12 @@ function App() {
               )
     }     
     </BrowserRouter>   
+<<<<<<< HEAD
     // </Provider>   
+=======
+    </Provider>   
+    </>
+>>>>>>> 4f75835 (Frontend)
   )
 }
 

@@ -46,6 +46,10 @@ h1{
 .parallax{
   overflow: hidden;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav {
@@ -61,16 +65,19 @@ h1{
   transition: transform 0.5s ease-in-out; /* Smooth hide/show */
 }
 
+.landingWrapper{
+  height: 200vh;
+  width: 100vw;
+}
 
 .container {
-  height: 110vh;
+  height: 100vh;
   width: 100%;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 
 
@@ -91,6 +98,37 @@ h1{
   width: 100%;
   height: 100%;
   object-fit: contain; 
+}
+
+
+.info{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 300px;
+  opacity: 0;
+}
+
+.infoLeft{
+  padding-left: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+
+.infoRight{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
 }
 
 

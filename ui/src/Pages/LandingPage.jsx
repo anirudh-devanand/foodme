@@ -19,6 +19,7 @@ const LandingPage = () => {
   const secondayImg1 = useRef(null);
   const secondayImg2 = useRef(null);
   const navRef = useRef(null);
+  const infoRef = useRef(null);
 
 
 
@@ -34,7 +35,7 @@ const LandingPage = () => {
               scrollTrigger: {
                   trigger: containerRef.current,
                   start: "top top",
-                  end: "bottom bottom",
+                  end: "bottom 80%",
                   scrub: true,
                   pin: true,
                   markers: true
@@ -122,11 +123,11 @@ const LandingPage = () => {
 
                     
         tl.to(
-            h1Ref.current,
+            containerRef.current,
             {
-                y: "-=80",
+                opacity: 0,
             },
-            0
+            
         );
 
               
@@ -141,6 +142,8 @@ const LandingPage = () => {
         <div className='parallax'>
         
         <Nav ref={navRef}/>
+
+        <div className="landingWrapper">
          
         <div ref={containerRef} className="container">
             <h1 ref={h1Ref}>
@@ -164,8 +167,20 @@ const LandingPage = () => {
             <img src="/src/assets/img3.png"/>
         </div>
 
+        <div className='info' ref={infoRef}>
+            <div className="infoLeft">
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo 
+                eos doloremque cupiditate eum quis, eaque vero quam dolores laborum excepturi 
+                molestiae voluptatem quae ullam, possimus et. Voluptas in eius quaerat.</p>
+            </div>
+            <div className="infoRight">
+                <p>SKfbsfkbuafhisdafs</p>
+            </div>
+        </div>
 
         </div>
+        </div>
+
         </div>
    
   )

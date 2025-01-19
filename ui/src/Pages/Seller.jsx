@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import './Seller.css';
 import {addItem} from "../../api/api";
+import { useSelector } from 'react-redux';
 
 import { useSelector } from 'react-redux';
 import { current } from '@reduxjs/toolkit';
 
 const Seller = (props) => {
-  const{currentUser} = useSelector((state) => state.user); 
-  console.log(currentUser);
-  // const{currentUser} = props; 
-  console.log(currentUser)
+
+  const {currentUser} = useSelector((state) => state.user);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [country, setCountry] = useState('');
   const [price, setPrice] = useState('');
 
   const [errors, setErrors] = useState({
-    currentUser,
     name: '',
     description: '',
     country: '',
@@ -24,6 +22,8 @@ const Seller = (props) => {
   });
 
   const handleSubmit = async () => {
+
+    console.log(currentUser);
     // Check if all fields are filled, else set error messages
     console.log("USER: ", currentUser);
     let formErrors = { name: '', description: '', country: '', price: '', currentUser: currentUser};

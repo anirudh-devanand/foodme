@@ -5,7 +5,8 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    color: white;
+    background-color: grey;
+    color: white !important;
 }
 
 .top{
@@ -24,13 +25,11 @@
     margin: 5px;
     border-radius: 20px;
     background-color: inherit;
-    color: black; 
 }
 
 .filter{
     border: 2px solid black;
     background-color: inherit;
-    color: black; 
     display: flex;
     justify-content: center;
     align-items: bottom;
