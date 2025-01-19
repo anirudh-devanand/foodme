@@ -7,10 +7,7 @@ import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumber
 
 import { LineChart } from '@mui/x-charts';
 
-<<<<<<< HEAD
 import { current } from '@reduxjs/toolkit';
-=======
->>>>>>> 485ff0e (Frontend)
 
 const Seller = (props) => {
   const {currentUser} = useSelector((state) => state.user);
