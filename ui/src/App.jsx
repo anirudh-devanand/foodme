@@ -9,7 +9,7 @@ import Seller from "./Pages/Seller.jsx";
 
 function App() {
   const {currentUser} = useSelector((state) => state.user);
-  // const [currentUser, setCurrentUser] = useState(false);
+  // // const [currentUser, setCurrentUser] = useState(false);
 
   return (
     <>

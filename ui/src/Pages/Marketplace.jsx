@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Cards from '../Components/Card/Cards';
 import "./Marketplace.css";
 import TuneIcon from '@mui/icons-material/Tune';
 import Map from '../Components/Map/Map';
 import Cuisine from '../Components/Cuisines/Cuisines';
+import {marketPlaceData} from "../../api/api";
 
 const Marketplace = () => {
 
@@ -18,6 +19,20 @@ const Marketplace = () => {
   const handleChange = (event) => {
     setPrice(event.target.value);
   };
+
+  const getMarketPlaceItems = async() => {
+      await marketPlaceData()
+        .then((res) => {
+          console.log(res);
+        })
+          .catch((error) => {
+              alert(error.response.data.message);
+      });
+  }
+
+  useEffect(() => {
+    getMarketPlaceItems();
+  }, [])
 
 
   return (

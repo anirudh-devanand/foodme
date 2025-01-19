@@ -6,6 +6,8 @@ const API = axios.create({
 
 export const userSignIn = async(data) => await API.post("/login", data);
 export const userSignUp = async(data) => await API.post("/register", data);
+
+export const marketPlaceData = async() => await API.get("/marketplace");
 // export const userSignUp = async(data) =>{
 //     try {
 //         const response = await API.post("/register", data);
