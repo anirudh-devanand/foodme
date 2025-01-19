@@ -5,14 +5,18 @@ import './App.css';
 import Authentication from './Pages/Authentication.jsx';
 import LandingPage from "./Pages/LandingPage.jsx"; 
 import Marketplace from './Pages/Marketplace.jsx';
+import { useSelector } from 'react-redux';
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {currentUser} = useSelector((state) => state.user);
 
   return (
     <>
-      <Authentication/>
+       {currentUser ? 
+                <LandingPage></LandingPage>:
+                <Authentication></Authentication>
+    }           
     </>
   )
 }
