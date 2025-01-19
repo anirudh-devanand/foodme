@@ -25,7 +25,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignUp = async() => {
-      await userSignUp({fullname, userName, email, password})
+      await userSignUp({fullname, username, email, password})
           .then((res) =>{
               dispatch(loginSuccess(res.data));
               alert("Account Created Success");
