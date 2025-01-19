@@ -37,7 +37,7 @@ const LandingPage = () => {
                   end: "bottom bottom",
                   scrub: true,
                   pin: true,
-                  markers: true,
+                  markers: true
               },
           });
 
@@ -78,7 +78,7 @@ const LandingPage = () => {
             {
                 y:0,
                 opacity: 1,
-                duration:3,
+                duration:2,
             }
             ,"<"
           );
@@ -96,6 +96,39 @@ const LandingPage = () => {
               }, 
           );
 
+          gsap.to(
+            secondayImg1.current, 
+            {
+                x: 200, 
+                rotate: 10,
+                opacity: 1,
+                duration: 1.5,
+                filter: "blur(2px)",
+            }, 
+            "<"
+        );
+
+        gsap.to(
+            secondayImg2.current, 
+            {
+                x: -200,
+                rotate: -10,
+                opacity: 1,
+                duration: 1.5,
+                filter: "blur(2px)",
+            }, 
+            "<"
+        );   
+
+                    
+        tl.to(
+            h1Ref.current,
+            {
+                y: "-=80",
+            },
+            0
+        );
+
               
         
 
@@ -110,7 +143,7 @@ const LandingPage = () => {
         <Nav ref={navRef}/>
          
         <div ref={containerRef} className="container">
-            <h1 ref = {h1Ref}>
+            <h1 ref={h1Ref}>
                 
             {[...Array(8)].map((key ,index) => (
                 <div className='text' style={{display: "inline-block"}} 
@@ -120,6 +153,15 @@ const LandingPage = () => {
 
         <div ref={bgImgRef} className='bgImg'>
                 <img src="/src/assets/landingPage.png"/>
+        </div>
+
+
+        <div ref={secondayImg1} className='secondaryImg'>
+            <img src="/src/assets/img2.png"/>
+        </div>
+
+        <div ref={secondayImg2} className='secondaryImg'>
+            <img src="/src/assets/img3.png"/>
         </div>
 
 

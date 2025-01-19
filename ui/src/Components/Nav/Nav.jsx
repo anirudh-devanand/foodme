@@ -26,7 +26,9 @@ border-bottom: 2px solid white;}
 
 const Nav = forwardRef((props, ref) => {
 
-  const {currentUser} = useSelector((state) => state.user);
+  // const {currentUser} = useSelector((state) => state.user);
+  const [currentUser, setCurrentUser] = useState(true);
+
   
   return (
     <>
@@ -35,7 +37,7 @@ const Nav = forwardRef((props, ref) => {
         <Navlink to="/">Dashboard</Navlink>
         <Navlink to="/marketplace">Marketplace</Navlink>
         <Navlink to="/seller">Seller</Navlink>
-        <Navlink to="/auth">Logout</Navlink>
+        <Navlink to="/auth" className="navBtn">Logout</Navlink>
       </div>
     ) : (
       <div className="navContainer" ref={ref}>

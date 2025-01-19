@@ -5,16 +5,16 @@ import Dashboard from './Pages/Dashboard.jsx';
 import Authentication from './Pages/Authentication.jsx';
 import LandingPage from "./Pages/LandingPage.jsx"; 
 import Marketplace from './Pages/Marketplace.jsx';
-
-
+import Seller from "./Pages/Seller.jsx";
 
 function App() {
-  const {currentUser} = useSelector((state) => state.user);
+  // const {currentUser} = useSelector((state) => state.user);
+  const [currentUser, setCurrentUser] = useState(false);
 
   return (
     <>
     <BrowserRouter>
-       {currentUser ? 
+       {{currentUser} ? 
               (
                 <Routes>
                     <Route path="/" exact element = {<LandingPage/>}/>

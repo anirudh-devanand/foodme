@@ -32,7 +32,7 @@ const SignIn = () => {
               dispatch(loginSuccess(res.data));
               console.log(res.data);
               alert("Login Success");
-          })
+          })  
           .catch((error) => {
               alert(error.response.data.message);
           });
