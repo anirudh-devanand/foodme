@@ -15,6 +15,7 @@ const Cuisine = () => {
     'Thai',
     'Japanese',
     'French',
+    'African',
     'Mediterranean',
     'American',
     'Greek',

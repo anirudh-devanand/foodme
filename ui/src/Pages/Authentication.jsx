@@ -9,15 +9,16 @@ import { GoogleOAuthProvider,GoogleLogin  } from '@react-oauth/google';
 import "./Authentication.css";
 
 
-const Wrapper = styled.div`
+const AuthWrapper = styled.div`
 display: flex;
 align-items: center;
 justify-content: center;
 width: 100vw;
 height: 100vh;
+background-color: white;
 `;
 
-const Container = styled.div`
+const AuthContainer = styled.div`
 display: flex; 
 flex-direction: row; 
 align-items: center;
@@ -43,7 +44,6 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 height: 90%;
-background-color: white;
 `;
 
 const Text = styled.div`
@@ -89,8 +89,8 @@ const Authentication = () => {
   };
 
   return (
-    <Wrapper>
-        <Container>
+    <AuthWrapper>
+        <AuthContainer>
             <Left>
 
             </Left>
@@ -138,8 +138,8 @@ const Authentication = () => {
         </div>
             </Right>
 
-        </Container>
-    </Wrapper>
+        </AuthContainer>
+    </AuthWrapper>
   )
 }
 

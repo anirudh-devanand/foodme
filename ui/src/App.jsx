@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css';
+import { useSelector } from 'react-redux';
+import {Routes, Route, BrowserRouter} from 'react-router-dom'; 
+import Dashboard from './Pages/Dashboard.jsx';
 import Authentication from './Pages/Authentication.jsx';
 import LandingPage from "./Pages/LandingPage.jsx"; 
 import Marketplace from './Pages/Marketplace.jsx';
-import { useSelector } from 'react-redux';
+
 
 
 function App() {
@@ -13,10 +13,25 @@ function App() {
 
   return (
     <>
+    <BrowserRouter>
        {currentUser ? 
-                <LandingPage></LandingPage>:
-                <Authentication></Authentication>
-    }           
+              (
+                <Routes>
+                    <Route path="/" exact element = {<LandingPage/>}/>
+                    <Route path="/auth" exact element = {<Authentication/>}/>
+                    <Route path="/marketplace" exact element = {<Marketplace/>}/>
+                    <Route path="/seller" exact element = {<Seller/>}/>
+                </Routes>
+              )
+              :
+              (
+                <Routes>
+                  <Route path="/auth" exact element = {<Authentication/>}/>
+                  <Route path="/" exact element = {<LandingPage/>}/>
+                </Routes>
+              )
+    }     
+    </BrowserRouter>      
     </>
   )
 }

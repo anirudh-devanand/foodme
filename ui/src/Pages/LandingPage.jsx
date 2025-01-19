@@ -66,20 +66,21 @@ const LandingPage = () => {
                       duration: 2.61,
                       delay: 3 + (index * 0.1), 
                     },
-              )
+              ),
+              "<"
           });  
 
           gsap.fromTo(
             navRef.current, 
             {
-              opacity: 0
+              opacity: 0, 
             }, 
             {
-              opacity: 1,
-              duration:1,
-              delay: 3,
-              filter: "blur(2px)",
+                y:0,
+                opacity: 1,
+                duration:3,
             }
+            ,"<"
           );
           
 
