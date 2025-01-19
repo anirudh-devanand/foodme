@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Seller.css';
+import {addItem} from "../../api/api";
 
 const Seller = () => {
   const [name, setName] = useState('');
@@ -43,23 +44,32 @@ const Seller = () => {
       const formData = { name, description, country, price };
 
       try {
-        // Send POST request to the server
-        const response = await fetch('/addItem', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-
-        if (response.ok) {
-          console.log('Item added successfully');
-          // Handle success (e.g., clear form or show a success message)
-        } else {
-          console.error('Failed to add item');
-          // Handle failure (e.g., show an error message)
-        }
+        await addItem(formData)
+        .then((res) => {
+          console.log(res);
+        })
       } catch (error) {
-        console.error('Error sending data:', error);
+          console.log(error);
       }
+
+      // try {
+      //   // Send POST request to the server
+      //   const response = await fetch('/addItem', {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify(formData),
+      //   });
+
+      //   if (response.ok) {
+      //     console.log('Item added successfully');
+      //     // Handle success (e.g., clear form or show a success message)
+      //   } else {
+      //     console.error('Failed to add item');
+      //     // Handle failure (e.g., show an error message)
+      //   }
+      // } catch (error) {
+      //   console.error('Error sending data:', error);
+      // }
     }
   };
 
