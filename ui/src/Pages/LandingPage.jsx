@@ -20,7 +20,7 @@ const LandingPage = () => {
   const secondayImg2 = useRef(null);
   const navRef = useRef(null);
   const infoRef = useRef(null);
-
+    const scrollerRef = useRef(null);
 
 
 
@@ -35,7 +35,7 @@ const LandingPage = () => {
               scrollTrigger: {
                   trigger: containerRef.current,
                   start: "top top",
-                  end: "bottom 80%",
+                  end: "bottom 90%",
                   scrub: true,
                   pin: true,
                   markers: true
@@ -127,13 +127,76 @@ const LandingPage = () => {
             {
                 opacity: 0,
             },
-            
-        );
-
-              
+        ); 
         
+        tl.to(
+            infoRef.current,
+            {
+                opacity: 1,
+            },
+        );  
 
-          
+        const masks = document.querySelectorAll('.mask');
+
+        masks.forEach((mask) => {
+            let tl2 = gsap.timeline({
+                scrollTrigger: {
+                    trigger: infoRef.current, 
+                    start: "top 10%",
+                    end: "top top", 
+                    scrub: true,
+                }
+            }); 
+
+            let img = mask.querySelector('img');
+
+            
+            tl2.set(mask, {autoAlpha: 1});
+
+            tl2.from(
+                mask, 2, 
+                {
+                    yPercent: -100, 
+                    duration:2,
+                    ease: "power2.inOut"
+                }
+            ); 
+            tl2.from(
+                img, 2, 
+                {
+                    yPercent: 100, 
+                    scale: 1.3,
+                    ease: "power2.inOut"
+                }, 
+                "<"
+            );
+        });
+
+        // let tl2 = gsap.timeline({
+        //     defaults: { duration: 5},
+        //     scrollTrigger: {
+        //         trigger: containerRef.current,
+        //         start: "bottom 90%",
+        //         end: "bottom 70%",
+        //         scrub: true,
+        //         pin: true,
+        //         markers: true
+        //     },
+        // });
+
+        // tl2.fromTo(
+        //     scrollerRef.current, 
+        //     {
+        //         opacity: 0, 
+        //         y: 100
+        //     }, 
+
+        //     {
+        //         y: 0,
+        //         opacity: 1
+        //     }
+        // );
+
       });
       return () => ctx.revert();
   }, []);
@@ -167,18 +230,43 @@ const LandingPage = () => {
             <img src="/src/assets/img3.png"/>
         </div>
 
-        <div className='info' ref={infoRef}>
-            <div className="infoLeft">
+
+
+        </div>
+
+        <div>
+        <div className='info' >
+            <div className="infoLeft infoTop" ref={infoRef}>
                 <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo 
                 eos doloremque cupiditate eum quis, eaque vero quam dolores laborum excepturi 
                 molestiae voluptatem quae ullam, possimus et. Voluptas in eius quaerat.</p>
+                <div className="infoRight">
+                    <p>SKfbsfkbuafhisdafs</p>
+                </div>
             </div>
-            <div className="infoRight">
-                <p>SKfbsfkbuafhisdafs</p>
-            </div>
-        </div>
 
+            <div className="imageScroller infoBottom" ref={scrollerRef}>
+                <div className="scroller">
+                    <div className="mask">
+                        <img src='/src/assets/scrollerImg.png'/>
+                    </div>
+                </div>
+                    <div className="scroller">
+                        <div className="mask">
+                            <img src='/src/assets/scrollerImg2.png'/>
+                        </div>
+                </div>
+                <div className="scroller">
+                    <div className="mask">
+                        <img src='/src/assets/scrollerImg3.png'/>
+                    </div>
+                </div>
+
+            </div>
+        
         </div>
+        </div>
+       
         </div>
 
         </div>

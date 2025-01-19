@@ -1,13 +1,24 @@
 /* Seller.css */
+.sellerContainer{
+  height: 100%;
+  width: 100%;
+  background-color: rgba(12, 12, 12, 0.91);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 
 .seller-form {
-    width: 100%;
+    position: absolute;
+    width: 80%;
     max-width: 600px;
     margin: 50px auto;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 20;
   }
   
   .seller-form h2 {
@@ -21,6 +32,13 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+  }
+
+  .lineChartContainer{
+    border: 1px solid #5e4e6b; /* Softer purple border */
+    max-height: 400px;
+    width: fit-content;
+    position: relative;
   }
   
   .seller-form label {
@@ -76,3 +94,112 @@
     font-size: 12px;
     margin-top: 5px;
   }
+
+
+  .sellerContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .sellerContainer .bottom
+  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .sellerContainer .bottomBox{
+    border: 2px solid block;
+    height: 80%;
+    padding: 10px 10px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #a78bfa, #6d28d9);
+    width: 150px;
+    height: 100px;
+  }
+
+  .performanceOverview{
+    width: 100%;
+    margin-left: 10%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 2%;
+  }
+
+  .performanceOverview .perfBottom{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: left;
+    gap: 15px;
+  }
+
+  .sellerListings{
+    display: block;
+    width: 90%;
+    border: 2px solid white;
+    height: fit-content; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+  }
+
+  .currentListings{
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: center;
+   padding: 5px 5px;
+   background-color: rgb(239, 97, 8);
+   color: black;
+   border-radius: 2px;
+   gap: 5px;
+   height: fit-content;
+   height: 30px;
+   cursor: pointer;
+}
+
+
+
+  .createListing{
+    position: absolute;
+    top: 10px;
+    right: 2%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 5px;
+    background-color: #7c3aed; /* Deep purple shade */
+    color: white;
+    border-radius: 2px;
+    gap: 5px;
+    height: 30px;
+    transition: scale 0.5s ease, color 1s ease;
+    cursor: pointer;
+   }
+
+   .createListing:hover {
+    background-color: rgb(68, 33, 241); /* Slightly lighter orange */
+    scale: 1.2; /* Change text color for contrast */
+    cursor: pointer;
+
+  }
+  
+ 
+

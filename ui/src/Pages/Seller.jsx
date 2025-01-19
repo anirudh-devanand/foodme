@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import './Seller.css';
 import {addItem} from "../../api/api";
 import { useSelector } from 'react-redux';
+import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
+import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
+
+import { LineChart } from '@mui/x-charts';
 
 import { current } from '@reduxjs/toolkit';
 
 const Seller = (props) => {
-
   const {currentUser} = useSelector((state) => state.user);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -14,6 +17,8 @@ const Seller = (props) => {
   const [price, setPrice] = useState('');
   const [address, setAddress] = useState('');
   const [image, setImage] = useState(null); // Add state for image
+  const [newListing, setNewListing] = useState(false);
+
   const [errors, setErrors] = useState({
     name: '',
     description: '',
@@ -105,7 +110,9 @@ const Seller = (props) => {
   };
 
   return (
-    <div className="seller-form">
+
+    <div className="sellerContainer">
+    <div className="seller-form"  style={{ display: newListing ? 'block' : 'none' }}>
       <h2>Create new listing</h2>
       <form
         onSubmit={(e) => e.preventDefault()} // Prevent default form submission behavior
@@ -441,6 +448,75 @@ const Seller = (props) => {
           Enter
         </button>
       </form>
+    </div>
+
+    <div className="performanceOverview">
+      <div className="perfTop">
+         <h2>Performance Overview</h2>
+      </div>
+
+      <div className="perfBottom">
+          <div className="bottomBox totalSales">
+              <p>
+                Daily Sales
+              </p>
+              <h2>$700</h2>
+          </div>
+
+          <div className="bottomBox totalRevenue">
+              <p>
+               Montly Revenue
+              </p>
+              <h2>$2300</h2>
+          </div>
+
+          <div className="bottomBox avgOrderVol">
+              <p>
+                Avg. Order Volume
+              </p>
+              <h2>12</h2>
+          </div>
+
+          
+      </div>
+      <div className="lineChartContainer">
+        <LineChart className='lineChart'
+          width={500}
+          height={300}
+          series={[
+            {data: DailySales, label: 'DailySales' ,yAxisId: 'leftAxisId' },
+            {data: TotalSales, label: 'TotalSales', yAxisId: 'rightAxisId' },
+          ]}
+          sx={{
+            stroke: '#FFFFFF',
+            strokeWidth: 1,
+        }}
+          xAxis={[{ scaleType: 'point', data: xLabels }]}
+          yAxis={[{ id: 'leftAxisId' }, { id: 'rightAxisId' }]}
+          rightAxis="rightAxisId"
+        />
+</div>
+
+    </div>
+
+
+    <div className="sellerListings">
+      <div className="top">
+        <div className="currentListings">
+          <FormatListNumberedOutlinedIcon/>
+          <h3>Your Current Listings</h3>
+        </div>
+        <h3 className='createListing' onClick={() => setNewListing(!newListing)}>
+          <AddCircleOutlinedIcon/>
+         <h3>Add a listing</h3>
+        </h3>
+      </div>
+
+      <div className="bottom">
+
+      </div>
+
+    </div>
     </div>
   );
 };

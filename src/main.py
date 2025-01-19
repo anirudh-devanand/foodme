@@ -502,22 +502,29 @@ def home():
 #     return jsonify({'message': 'Item updated successfully!', 'item': {'name': item_name, 'expiry': item_expiry}})
 
 @app.route('/deleteItem', methods=['POST'])
-@login_required
+# @login_required
 def deleteItem():
     data = request.get_json()
+    item_id = data['_id']
 
-    item_name = data['itemData']['name']
-    item_id = data['itemData']['_id']
     query = {"_id" : item_id}
 
-    result = mongo.db.dishes.delete_one(query)
+    print(mongo.db.dishes.find_one({"name": "dfs"}))
+
+    print(item_id)
+    # itemToDel = mongo.db.dishes.find_one({"_id": item_id})
+    itemToDel = mongo.db.dishes.find_one({"_id": ObjectId(item_id)})
+    # print(itemToDel)
+
+    result = mongo.db.dishes.delete_one(itemToDel)
+    
 
     if result.deleted_count > 0:
         print("Successfully deleted item")
     else:
         print("No document deleted")
 
-    return jsonify({'message': 'Item deleted successfully!', 'item': {'name': item_name, '_id': item_id}})
+    return jsonify({'message': 'Item deleted successfully!', 'item': {'_id': item_id}})
 
 # # Seller adds/posts new dish
 # @app.route('/addItem', methods=['POST'])
@@ -622,7 +629,7 @@ def showList():
     # for dish in dishes:
     #     dish["seller_name"] = dish["seller_name"]["username"]
     
-    print(f"PRINT: {dishes_list[0]}")
+    # print(f"PRINT: {dishes_list[0]}")
     
     return jsonify(dishes_list), 200
 

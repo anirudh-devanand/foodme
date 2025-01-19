@@ -11,10 +11,10 @@ import {store} from './Redux/Store.js';
 
 
 function App() {
-  //const {currentUser} = useSelector((state) => state.user);
-   const [currentUser, setCurrentUser] = useState(true);
-   const curr =  useSelector((state) => state.user);
-  console.log(curr);
+  const {currentUser} = useSelector((state) => state.user);
+  console.log("printing", currentUser);
+  // // const [currentUser, setCurrentUser] = useState(false);
+
   return (
     <>
   <Provider store={store}>
