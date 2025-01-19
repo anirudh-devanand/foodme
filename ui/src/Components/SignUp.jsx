@@ -37,7 +37,7 @@ const SignUp = () => {
 
 
   const [fullname, setName] = useState("");
-  const [userName, setuserName] = useState("");
+  const [username, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -53,7 +53,7 @@ const SignUp = () => {
         <UserInput 
             name="User Name" 
             Placeholder="Enter your User Name"
-            value={userName}
+            value={username}
             handleChange={(e) => setuserName(e.target.value)}
         />
 
