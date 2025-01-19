@@ -26,8 +26,8 @@ border-bottom: 2px solid white;}
 
 const Nav = forwardRef((props, ref) => {
 
-  // const {currentUser} = useSelector((state) => state.user);
-  const [currentUser, setCurrentUser] = useState(true);
+  const {currentUser} = useSelector((state) => state.user);
+  // const [currentUser, setCurrentUser] = useState(true);
 
   
   return (

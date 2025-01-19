@@ -8,8 +8,8 @@ import Marketplace from './Pages/Marketplace.jsx';
 import Seller from "./Pages/Seller.jsx";
 
 function App() {
-  // const {currentUser} = useSelector((state) => state.user);
-  const [currentUser, setCurrentUser] = useState(false);
+  const {currentUser} = useSelector((state) => state.user);
+  // const [currentUser, setCurrentUser] = useState(false);
 
   return (
     <>
