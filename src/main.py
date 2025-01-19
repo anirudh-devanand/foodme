@@ -633,10 +633,10 @@ def showList():
 def searchFilter():
     # Get request data
     data = request.json  # Assuming the request is JSON
-    username = data.get('username')
-    price = data.get('price')
-    country = data.get('country')
-    distance = data.get('distance')
+    username = data['username']
+    price = data['price']
+    country = data['country']
+    distance = data['distance']
 
     query = {}
 
@@ -659,7 +659,7 @@ def searchFilter():
 
     filtered_results = []
     for dish in results:
-        dish_address = dish.get('address')  # The address in the dish document
+        dish_address = dish["address"]  # The address in the dish document
 
         # Apply the distance filter if specified
         if distance:
