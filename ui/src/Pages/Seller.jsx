@@ -86,7 +86,15 @@ const xLabels = [
 
     if (isValid) {  
       // Prepare form data
-      const formData = { name, description, country, price, currentUser, location, image, location};
+
+      const payload = {
+        name: file.name,
+        contentType: file.type,
+        data: Array.from(new Uint8Array(binaryData)), // Convert ArrayBuffer to Array
+      };
+  
+      
+      const formData = { name, description, country, price, currentUser, image, location, payload};
 
 
       try {
@@ -119,6 +127,10 @@ const xLabels = [
       // }
     }
   };
+
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [binaryData, setBinaryData] = useState(null);
 
   const handleImageChange = (e) => {
     console.log("IMAGE: ", e.target.files); 
@@ -344,16 +356,16 @@ const xLabels = [
     onBlur={(e) => (e.target.style.borderColor = '#ccc')}
   >
     <option value="" disabled>Select Country</option>
-    <option value="Afghanistan">American</option>
-    <option value="Åland Islands">French</option>
-    <option value="Albania">German</option>
-    <option value="Algeria">Thai</option>
-    <option value="American Samoa">Japanese</option>
-    <option value="Andorra">Italian</option>
-    <option value="Angola">Greek</option>
-    <option value="Anguilla">Lebanese</option>
-    <option value="Anguilla">Indian</option>
-    <option value="Anguilla">Chinese</option>
+    <option value="American">American</option>
+    <option value="French">French</option>
+    <option value="German">German</option>
+    <option value="Thai">Thai</option>
+    <option value="Japanese">Japanese</option>
+    <option value="Italian">Italian</option>
+    <option value="Greek">Greek</option>
+    <option value="Lebanese">Lebanese</option>
+    <option value="Indian">Indian</option>
+    <option value="Chinese">Chinese</option>
     {/* Add more countries as needed */}
   </select>
   {errors.country && (
