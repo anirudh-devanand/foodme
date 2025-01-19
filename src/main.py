@@ -518,7 +518,7 @@ def addItem():
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
 
 
-@app.route('/showList', methods=['GET'])
+@app.route('/marketplace', methods=['GET'])
 @login_required
 def showList():
     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
