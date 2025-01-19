@@ -348,8 +348,7 @@ class User(UserMixin):
             'fullname': self.fullname,
             'username': self.username,
             'email': self.email,
-            'address': self.address,
-            'image': self.image
+            'address': self.address
         }
     
 
@@ -431,7 +430,7 @@ def register():
     if form.data["submit"]:
         print("IN THIS")
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash password before saving
-        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data, fullname=form.fullname.data)
+        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data, fullname=form.fullname.data, address = form.address.data)
         new_user.save()
         print("Registered")
         return "something"
@@ -629,7 +628,7 @@ def showList():
     # for dish in dishes:
     #     dish["seller_name"] = dish["seller_name"]["username"]
     
-    # print(f"PRINT: {dishes_list[0]}")
+    print(f"PRINT: {dishes_list[0]}")
     
     return jsonify(dishes_list), 200
 
