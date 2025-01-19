@@ -2,13 +2,21 @@ import React, { useState } from 'react';
 import './Seller.css';
 import {addItem} from "../../api/api";
 
-const Seller = () => {
+import { useSelector } from 'react-redux';
+import { current } from '@reduxjs/toolkit';
+
+const Seller = (props) => {
+  const{currentUser} = useSelector((state) => state.user); 
+  console.log(currentUser);
+  // const{currentUser} = props; 
+  console.log(currentUser)
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [country, setCountry] = useState('');
   const [price, setPrice] = useState('');
 
   const [errors, setErrors] = useState({
+    currentUser,
     name: '',
     description: '',
     country: '',
@@ -17,7 +25,8 @@ const Seller = () => {
 
   const handleSubmit = async () => {
     // Check if all fields are filled, else set error messages
-    let formErrors = { name: '', description: '', country: '', price: '' };
+    console.log("USER: ", currentUser);
+    let formErrors = { name: '', description: '', country: '', price: '', currentUser: currentUser};
     let isValid = true;
 
     if (!name) {
@@ -39,11 +48,13 @@ const Seller = () => {
 
     setErrors(formErrors); // Set the error messages
 
-    if (isValid) {
+    if (isValid) {  
       // Prepare form data
-      const formData = { name, description, country, price };
+      const formData = { name, description, country, price, currentUser};
+
 
       try {
+        console.log("form: " , formData);
         await addItem(formData)
         .then((res) => {
           console.log(res);

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { ReactReduxContext, useSelector } from 'react-redux';
 import {Routes, Route, BrowserRouter} from 'react-router-dom'; 
 import Dashboard from './Pages/Dashboard.jsx';
 import Authentication from './Pages/Authentication.jsx';
@@ -7,12 +7,17 @@ import LandingPage from "./Pages/LandingPage.jsx";
 import Marketplace from './Pages/Marketplace.jsx';
 import Seller from "./Pages/Seller.jsx";
 
+import { Provider } from 'react-redux';
+import { store } from './Redux/Store.js';
+import { Sell } from '@mui/icons-material';
+
 function App() {
   const {currentUser} = useSelector((state) => state.user);
+  console.log("printing", currentUser);
   // // const [currentUser, setCurrentUser] = useState(false);
 
   return (
-    <>
+    
     <BrowserRouter>
        {{currentUser} ? 
               (
@@ -20,7 +25,7 @@ function App() {
                     <Route path="/" exact element = {<LandingPage/>}/>
                     <Route path="/auth" exact element = {<Authentication/>}/>
                     <Route path="/marketplace" exact element = {<Marketplace/>}/>
-                    <Route path="/seller" exact element = {<Seller/>}/>
+                    <Route path="/seller" exact element = {<Seller user = {currentUser}/>}/>
                 </Routes>
               )
               :
@@ -31,8 +36,8 @@ function App() {
                 </Routes>
               )
     }     
-    </BrowserRouter>      
-    </>
+    </BrowserRouter>   
+    // </Provider>   
   )
 }
 
