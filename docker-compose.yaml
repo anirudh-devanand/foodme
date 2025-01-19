@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  ui:
+    build: ./ui
+    ports:
+      - "5173:5173" # Map Node.js app port to the host
+    volumes:
+      - ./ui:/app # Mount the Node.js app code for live updates
+      - node_modules:/app/node_modules
+    command: npm run dev # Command to start your Node.js app
+    depends_on:
+      - foodme # Ensures the Python app starts before the Node.js app
+
+  src:
+    restart: unless-stopped
+    build: ./src
+    ports:
+      - "5000:5000" # Map Python app port to the host
+    volumes:
+      - ./src:/app # Mount the Python app code for live updates
+    command: python main.py # Command to start your Python app
+
+volumes:
+  pgdata: {}
+  node_modules: {}
+    
