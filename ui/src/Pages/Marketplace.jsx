@@ -161,12 +161,12 @@ const Marketplace = () => {
         </div>
       </div>
 
-      {/* Render Cards for each marketplace item */}
-      <div className="bottom">
-        {marketPlaceItems.map((item, index) => (
-          <Cards key={index} data={item} /> // Pass each item as a prop to Cards
-        ))}
-      </div>
+        <div className="bottom">
+
+
+          </div>
+        
+
     </div>
   );
 };
