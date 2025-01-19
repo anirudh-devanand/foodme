@@ -163,13 +163,13 @@ const Marketplace = () => {
       </div>
 
         <div className="bottom">
-              <Cards name="Dev"
+              {/* <Cards name="Dev"
                      description="This Is desc."
                      country="Country" 
                      price ="Price" 
                      seller_name="Seller Name" 
                      image = " " 
-                     _id />
+                     _id /> */}
 
           </div>
         
