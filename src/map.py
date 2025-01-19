@@ -1,7 +1,8 @@
 import requests
 
-def get_distance_and_duration(origin, destination, api_key):
+def get_distance(origin, destination):
     try:
+        api_key = "AIzaSyBFohVz8rmdM6jz2AvFUNXavXwtMBiSYoY"
         # Base URL for the Google Maps Distance Matrix API
         base_url = "https://maps.googleapis.com/maps/api/distancematrix/json"
 
@@ -25,7 +26,8 @@ def get_distance_and_duration(origin, destination, api_key):
                 if len(elements) > 0 and elements[0].get("status") == "OK":
                     distance = elements[0]["distance"]["text"]
                     duration = elements[0]["duration"]["text"]
-                    return f"Distance: {distance}, Duration: {duration}"
+                    numeric_distance = distance.split()[0]
+                    return numeric_distance
                 else:
                     return f"Error: {elements[0]['status']}" if elements else "No elements found in response."
             else:
@@ -35,7 +37,3 @@ def get_distance_and_duration(origin, destination, api_key):
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
-origin = "5955 Student Union Blvd"
-destination = "6137 Cambie Stret"
-api_key = "AIzaSyBFohVz8rmdM6jz2AvFUNXavXwtMBiSYoY"
-print(get_distance_and_duration(origin, destination, api_key))
