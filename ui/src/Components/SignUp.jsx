@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import UserInput from './UserInput';
-
+import useDispatch from "../Redux/Reducers/userSlice"
 
 const Container = styled.div`
 display: flex;
@@ -15,6 +15,20 @@ width: 80%;
 
 
 const SignUp = () => {
+
+  const dispatch = useDispatch();
+
+  const handleSignUp = async() => {
+      await userSignUp({name, email, password})
+          .then((res) =>{
+              dispatch(loginSuccess(res.data));
+              alert("Account Created Success");
+          })
+          .catch((error) =>{
+              alert(error.response.data.message);
+          })
+  }
+
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

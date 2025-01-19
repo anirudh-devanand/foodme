@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import UserInput from './UserInput';
 import styled from 'styled-components';
-
+import useDispatch from "../Redux/Reducers/userSlice";
 
 const Container = styled.div`
 display: flex;
@@ -14,8 +14,23 @@ width: 80%;
 
 const SignIn = () => {
 
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+
+  const handleSignIn = async() => {
+      await userSignIn({email, password})
+          .then((res) =>{
+              console.log(res);
+              dispatch(loginSuccess(res.data));
+              console.log(res.data);
+              alert("Login Success");
+          })
+          .catch((error) => {
+              alert(error.response.data.message);
+          });
+  };
 
 
   return (
