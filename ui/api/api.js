@@ -6,3 +6,5 @@ const API = axios.create({
 
 export const userSignIn = async(data) => API.post("/user/signIn", data);
 export const userSignUp = async(data) => API.post("/user/signUp", data);
+
+export default API; 

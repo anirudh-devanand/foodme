@@ -43,6 +43,7 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 height: 90%;
+background-color: white;
 `;
 
 const Text = styled.div`
@@ -95,9 +96,7 @@ const Authentication = () => {
             </Left>
 
             <Right>
-                <div className="h1"><h1>COMPANY NAME</h1></div>
 
-                
 
             {!login ? (
             <>

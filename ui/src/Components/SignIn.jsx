@@ -1,8 +1,11 @@
 import React,{useState} from 'react';
 import UserInput from './UserInput';
 import styled from 'styled-components';
-import useDispatch from "../Redux/Reducers/userSlice";
-import userSignIn from "../../api/api.js"
+import Button from './Button'
+
+import {userSignIn }from "../../api/api"
+import {useDispatch} from "react-redux";
+import { loginSuccess } from '../Redux/Reducers/userSlice';
 
 const Container = styled.div`
 display: flex;
@@ -10,6 +13,7 @@ flex-direction: column;
 gap: 20px;
 align-items: center;
 width: 80%;
+font-color: white;
 `;
 
 
@@ -51,7 +55,7 @@ const SignIn = () => {
             handleChange={(e) => setPassword(e.target.value)}
         />
 
-
+      <Button onClick={(e) => handleSignIn(e)} text="Sign In">Sign IN</Button>
     </Container>
   )
 }
