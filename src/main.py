@@ -409,6 +409,33 @@ def addItem():
 
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
 
+
+# Seller adds/posts new dish
+@app.route('/addItem', methods=['POST'])
+@login_required
+def addItem():
+    data = request.get_json()
+
+    item_name = data['itemData']['name']  # Extract the actual item name
+    item_country = data['itemData']['country']
+    user_id = current_user.id  # Use the logged-in user's ID
+    user_name = mongo.db.users.find_one({'id': user_id})    
+
+    if not item_name:
+        return jsonify({'error': 'Missing item name'}), 400
+
+    expiry = datetime.now() + timedelta(hours=6)
+    new_dish = Dish(id=None, expiry=expiry, name=item_name, description='', price=0, seller_name=user_name, seller_id=user_id, country=item_country)
+    new_dish.save()
+
+    return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
 

@@ -1,64 +1,41 @@
-from geopy.geocoders import Nominatim
-import math
+import requests
 
-# Function to get latitude and longitude from address
-def get_lat_lng(address):
-    # Initialize Nominatim geolocator
-    geolocator = Nominatim(user_agent="myGeocoder")  # Always set a user-agent
-    
-    # Geocode the address
-    location = geolocator.geocode(address)
-    
-    # Check if the address was found
-    if location:
-        latitude = location.latitude
-        longitude = location.longitude
-        return latitude, longitude
-    else:
-        print(f"Address '{address}' not found!")
-        return None, None
+def get_distance_and_duration(origin, destination, api_key):
+    try:
+        # Base URL for the Google Maps Distance Matrix API
+        base_url = "https://maps.googleapis.com/maps/api/distancematrix/json"
 
-# Haversine formula to calculate distance between two points
-def haversine(lat1, lon1, lat2, lon2):
-    # Radius of the Earth in kilometers
-    R = 6371.0
-    
-    # Convert latitude and longitude from degrees to radians
-    lat1_rad = math.radians(lat1)
-    lon1_rad = math.radians(lon1)
-    lat2_rad = math.radians(lat2)
-    lon2_rad = math.radians(lon2)
-    
-    # Difference in coordinates
-    dlat = lat2_rad - lat1_rad
-    dlon = lon2_rad - lon1_rad
-    
-    # Haversine formula
-    a = math.sin(dlat / 2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2)**2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    
-    # Distance in kilometers
-    distance = R * c
-    return distance
+        # Parameters for the API request
+        params = {
+            "origins": origin,
+            "destinations": destination,
+            "key": api_key
+        }
 
-# Main logic to calculate distance between two addresses
-def calculate_distance_between_addresses(source, destination):
-    # Get latitude and longitude for both source and destination
-    source_lat, source_lng = get_lat_lng(source)
-    dest_lat, dest_lng = get_lat_lng(destination)
-    
-    if source_lat is not None and dest_lat is not None:
-        # Calculate the distance using the Haversine formula
-        distance = haversine(source_lat, source_lng, dest_lat, dest_lng)
-        print(f"The distance between '{source}' and '{destination}' is {distance:.2f} kilometers.")
-    else:
-        print("Could not calculate distance due to invalid addresses.")
+        # Make the API request
+        response = requests.get(base_url, params=params)
+        
+        if response.status_code == 200:
+            data = response.json()
+            # Check if rows exist
+            if "rows" in data and len(data["rows"]) > 0:
+                elements = data["rows"][0].get("elements", [])
+                
+                # Check if elements exist
+                if len(elements) > 0 and elements[0].get("status") == "OK":
+                    distance = elements[0]["distance"]["text"]
+                    duration = elements[0]["duration"]["text"]
+                    return f"Distance: {distance}, Duration: {duration}"
+                else:
+                    return f"Error: {elements[0]['status']}" if elements else "No elements found in response."
+            else:
+                return "No rows found in response."
+        else:
+            return f"HTTP Error: {response.status_code}"
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
-
-# Example addresses, change to get from producer/consumer
-source = "6080 Student Union Blvd, Vancouver, BC V6T 1Z1"  
-destination = "5955 Student Union Blvd, Vancouver, BC"
-
-# Calculate distance between the two addresses
-calculate_distance_between_addresses(source, destination)
-
+origin = "5955 Student Union Blvd"
+destination = "6137 Cambie Stret"
+api_key = "AIzaSyBFohVz8rmdM6jz2AvFUNXavXwtMBiSYoY"
+print(get_distance_and_duration(origin, destination, api_key))
