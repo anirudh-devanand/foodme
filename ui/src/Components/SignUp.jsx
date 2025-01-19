@@ -25,7 +25,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignUp = async() => {
-      await userSignUp({name, email, password})
+      await userSignUp({fullname, userName, email, password})
           .then((res) =>{
               dispatch(loginSuccess(res.data));
               alert("Account Created Success");
@@ -36,7 +36,7 @@ const SignUp = () => {
   }
 
 
-  const [name, setName] = useState("");
+  const [fullname, setName] = useState("");
   const [userName, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +46,7 @@ const SignUp = () => {
        <UserInput 
             name="Full Name" 
             Placeholder="Enter your Full Name"
-            value={name}
+            value={fullname}
             handleChange={(e) => setName(e.target.value)}
         />
 
