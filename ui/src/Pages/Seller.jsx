@@ -146,12 +146,13 @@ const xLabels = [
   return (
 
     <>
-    {/* <Nav/> */}
+    <Nav/>
 
     <div className="sellerContainer">
-    <div className="seller-form"  style={{ display: newListing ? 'block' : 'none' }}>
+    <div className="seller-form"  style={{ display: newListing ? 'block' : 'none' ,height: '60vh', marginTop: '10%', overflow: 'scroll'}}>
       <h2>Create new listing</h2>
       <form
+        // style = {{maxHeight: '800px', }}
         onSubmit={(e) => e.preventDefault()} // Prevent default form submission behavior
         onKeyDown={handleKeyPress}
       >
