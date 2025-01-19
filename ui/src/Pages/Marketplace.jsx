@@ -156,7 +156,7 @@ const Marketplace = () => {
                 />
               </div>
 
-              <Cuisine />
+              {/* <Cuisine /> */}
             </div>
           )}
         </div>

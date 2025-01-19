@@ -23,7 +23,7 @@ const Cuisine = () => {
 
   return (
     <div>
-      <label htmlFor="cuisine">Choose a Cuisine: </label>
+      <label for="cuisine">Choose a Cuisine: </label>
       <select
         id="cuisine"
         value={selectedCuisine}
