@@ -582,7 +582,11 @@ def deleteItem():
 @app.route('/addItem', methods=['POST'])
 def addItem():
     print("IN HERE!!!!!!!!!")
-    data = request.form  # Use request.form for multipart form-data
+    # data = request.form()  # Use request.form for multipart form-data
+    data = request.get_json()  # Use request.form for multipart form-data
+    # img = request.form()
+
+    print(f"DATA: {data}")
     item_name = data['name']
     item_country = data['country']
     item_descr = data['description']
@@ -590,7 +594,7 @@ def addItem():
     item_location = data['location']
     user_name = data['currentUser']['username']
     
-    # Retrieve the image file from the request
+    # # Retrieve the image file from the request
     image = request.files.get('image')  # Assume image is sent as part of form-data
     image_data = image.read() if image else None
 
@@ -603,6 +607,9 @@ def addItem():
     print(f"Dish saved: {new_dish}")
 
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
+    # return jsonify({'message': 'Item added successfully!', 'item': {'name': "sd", 'expiry': "2"}})
+
+
 # Helper function to recursively convert ObjectId to string in the document
 def convert_objectid(obj):
     if isinstance(obj, ObjectId):
@@ -614,21 +621,21 @@ def convert_objectid(obj):
     return obj
 
 @app.route('/marketplace', methods=['GET'])
-def showList():
-    dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
-    dishes_list = []
+# def showList():
+#     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
+#     dishes_list = []
 
-    for dish in dishes:
-        # Retrieve image from GridFS if exists
-        image_id = dish.get('image')
-        image = None
-        if image_id:
-            image = fs.get(image_id).read()  # Retrieve image from GridFS
-            dish['image'] = image.decode('utf-8')  # Optionally, encode the image as base64
+#     for dish in dishes:
+#         # Retrieve image from GridFS if exists
+#         image_id = dish.get('image')
+#         image = None
+#         if image_id:
+#             image = fs.get(image_id).read()  # Retrieve image from GridFS
+#             dish['image'] = image.decode('utf-8')  # Optionally, encode the image as base64
         
-        dishes_list.append(dish)
+#         dishes_list.append(dish)
 
-    return jsonify(dishes_list), 200
+#     return jsonify(dishes_list), 200
 
 # def showList():
 #     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
@@ -643,6 +650,24 @@ def showList():
 #     print(f"DISHES: {dishes_list}")
     
 #     return jsonify(dishes_list), 200
+
+def showList():
+    dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
+    dishes_list = []
+    
+    for dish in dishes:
+        # Serialize each dish to include its fields and convert ObjectId to string
+        dish['_id'] = str(dish['_id'])
+        # Recursively convert any ObjectId to string in the dish document
+        dish = convert_objectid(dish)
+        dishes_list.append(dish)
+
+    # for dish in dishes:
+    #     dish["seller_name"] = dish["seller_name"]["username"]
+    
+    print(f"PRINT: {dishes_list[0]}")
+    
+    return jsonify(dishes_list), 200
 
 @app.route('/searchFilter', methods=['POST'])
 @login_required

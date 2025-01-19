@@ -11,7 +11,7 @@ export const marketPlaceData = async() => await API.get("/marketplace");
 
 export const addItem = async(data) => await API.post("/addItem", data);
 
-export const delItem = async(data) => await API.post('/deleteItem', data); 
+export const delItem = async(data) => await API.post('/deleteItem', data);
 // export const userSignUp = async(data) =>{
 //     try {
 //         const response = await API.post("/register", data);

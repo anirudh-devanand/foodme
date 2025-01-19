@@ -121,6 +121,7 @@ const xLabels = [
   };
 
   const handleImageChange = (e) => {
+    console.log("IMAGE: ", e.target.files); 
     setImage(e.target.files[0]); // Store the uploaded image
   };
 
@@ -133,7 +134,7 @@ const xLabels = [
   return (
 
     <>
-    <Nav/>
+    {/* <Nav/> */}
 
     <div className="sellerContainer">
     <div className="seller-form"  style={{ display: newListing ? 'block' : 'none' }}>
