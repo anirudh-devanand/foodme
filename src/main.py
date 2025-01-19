@@ -241,6 +241,7 @@ from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect
 
 import jwt
+from gridfs import GridFS
 
 
 
@@ -268,6 +269,9 @@ uri = "mongodb+srv://admin:2dCwq8zbbwmFZgBV@foodmecluster.y6mdk.mongodb.net/?ret
 
 # Create a new client and connect to the server
 mongo = MongoClient(uri, server_api=ServerApi('1'))
+
+
+fs = GridFS(mongo.db) # Set up gridFs
 
 # Send a ping to confirm a successful connection
 try:
@@ -392,10 +396,13 @@ class Dish:
 
         @staticmethod
         def get(id):
-        # Use ObjectId to fetch the user by MongoDB's _id
             item_data = mongo.db.dishes.find_one({"_id": ObjectId(id)})
             if item_data:
-                return Dish(item_data["_id"], item_data["name"], item_data["image"], item_data["location"], item_data["description"], item_data["price"], item_data["expiry"],item_data["seller_id"],item_data["seller_name"],item_data["country"] )
+                image_id = item_data.get('image')
+                image = None
+                if image_id:
+                    image = fs.get(image_id).read()  # Retrieve image from GridFS
+                return Dish(item_data["_id"], item_data["name"], item_data["expiry"], item_data["description"], item_data["price"], item_data["seller_id"], item_data["country"], item_data["seller_name"], item_data["location"], image)
             return None
         
         def get_id(self):
@@ -574,37 +581,29 @@ def deleteItem():
 
 # Seller adds/posts new dish
 @app.route('/addItem', methods=['POST'])
-# @login_required
 def addItem():
     print("IN HERE!!!!!!!!!")
-    # print(f"Logged in: {current_user.id}")
-    data = request.get_json()
-
-    print(data)
-
-    print(f"User: {data['currentUser']}")
-
-    item_name = data['name']  # Extract the actual item name
+    data = request.form  # Use request.form for multipart form-data
+    item_name = data['name']
     item_country = data['country']
     item_descr = data['description']
     item_price = data['price']
-    item_image = data['image']
     item_location = data['location']
-    user_name = data['currentUser']["username"]; 
+    user_name = data['currentUser']['username']
+    
+    # Retrieve the image file from the request
+    image = request.files.get('image')  # Assume image is sent as part of form-data
+    image_data = image.read() if image else None
 
-    # user_id = currentUser.id  # Use the logged-in user's ID
-    user_id = mongo.db.users.find_one({'username': user_name})["_id"]   
-
-    # if not item_name:
-    #     return jsonify({'error': 'Missing item name'}), 400
+    user_id = mongo.db.users.find_one({'username': user_name})["_id"]
 
     expiry = datetime.now() + timedelta(hours=6)
-    new_dish = Dish(id=None, expiry=expiry, location=item_location, image=item_image, name=item_name, description= item_descr, price= item_price, seller_name=user_name, seller_id=user_id, country=item_country)
+    new_dish = Dish(id=None, expiry=expiry, location=item_location, image=image_data, name=item_name, description=item_descr, price=item_price, seller_name=user_name, seller_id=user_id, country=item_country)
     new_dish.save()
+
     print(f"Dish saved: {new_dish}")
 
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
-
 # Helper function to recursively convert ObjectId to string in the document
 def convert_objectid(obj):
     if isinstance(obj, ObjectId):
@@ -616,23 +615,21 @@ def convert_objectid(obj):
     return obj
 
 @app.route('/marketplace', methods=['GET'])
-# @login_required
 def showList():
     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
     dishes_list = []
 
     for dish in dishes:
-        # Recursively convert any ObjectId to string in the dish document
-        dish = convert_objectid(dish)
+        # Retrieve image from GridFS if exists
+        image_id = dish.get('image')
+        image = None
+        if image_id:
+            image = fs.get(image_id).read()  # Retrieve image from GridFS
+            dish['image'] = image.decode('utf-8')  # Optionally, encode the image as base64
+        
         dishes_list.append(dish)
-    
-    # for dish in dishes:
-    #     dish["seller_name"] = dish["seller_name"]["username"]
-    
-    # print(f"PRINT: {dishes_list[0]}")
-    
-    return jsonify(dishes_list), 200
 
+    return jsonify(dishes_list), 200
 
 # def showList():
 #     dishes = mongo.db.dishes.find()  # Retrieve all documents from the 'dishes' collection
