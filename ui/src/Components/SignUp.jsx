@@ -25,7 +25,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignUp = async() => {
-      await userSignUp({fullname, username, email, password})
+      await userSignUp({fullname, username, email, password, submit})
           .then((res) =>{
               dispatch(loginSuccess(res.data));
               alert("Account Created Success");
@@ -40,6 +40,7 @@ const SignUp = () => {
   const [username, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submit, setSubmit] = useState(true);
 
   return (
     <Container>
@@ -72,7 +73,7 @@ const SignUp = () => {
             handleChange={(e) => setPassword(e.target.value)}
         />
 
-  <Button text="Sign Up"
+  <Button type = "submit" text="Sign Up"
                 onClick={handleSignUp}></Button>
     </Container>
   )

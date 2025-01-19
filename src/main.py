@@ -238,9 +238,15 @@ from pymongo.server_api import ServerApi
 from flask import Flask
 from flask_cors import CORS
 
+from flask_wtf.csrf import CSRFProtect
+
+import jwt
+
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'thisisasecretkey'
+
+# csrf = CSRFProtect(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -263,6 +269,17 @@ except Exception as e:
     print(e)
 
 
+# def create_jwt_token(username):
+#     # expiration = datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
+#     expiration = datetime.datetime.now(datetime.UTC) + timedelta(hours=1)  # Token valid for 1 hour
+#     payload = {
+#         'sub': username,  # subject of the token (usually user identifier)
+#         'exp': expiration,  # expiration time
+#         'iat': datetime.datetime.now(datetime.UTC),  # issued at time
+#     }
+#     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+#     return token
+
 
 class User(UserMixin):
     def __init__(self, id, fullname, username, email, password):
@@ -283,6 +300,7 @@ class User(UserMixin):
         }
         # MongoDB will automatically assign an _id when inserting the document
         result = mongo.db.users.insert_one(user)
+        print(f"RESULT: {result}")
         # Update the User object with the MongoDB _id
         self.id = str(result.inserted_id)
     
@@ -312,6 +330,14 @@ class User(UserMixin):
             return cls(id=user['_id'], username=user['username'], email=user['email'], password=user['password'], fullname=user["fullname"])
             # return cls(id=user['_id'], email=user['email'], password=user['password'], fullname=user["fullname"])
         return None
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'fullname': self.fullname,
+            'username': self.username,
+            'email': self.email,
+        }
     
 # Load the user by user_id
 @login_manager.user_loader
@@ -380,29 +406,34 @@ class LoginForm(FlaskForm):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    if form.validate_on_submit():
+    print(f"FORM: {form.data}")
+    if form.data["submit"]:
+        print("IN THIS")
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash password before saving
-        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data, fullname=form.fullname)
+        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data, fullname=form.fullname.data)
         new_user.save()
-        return redirect(url_for('login'))
-    return render_template('register.html', form=form)
+        print("Registered")
+        return "something"
+    return "something"
 
 # Login Route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print("reached login")
+    # print("reached login")
     form = LoginForm()
     print(form.data)
-    print(form.email.data)
+    # print(form.email.data)
     # if form.validate_on_submit():
+    if form.data["submit"]:
         # user = User.get_by_username(form.username.data)
-    user = User.get_by_email(form.email.data)
-    print(f"USER: {user}")
-    if user and bcrypt.check_password_hash(user.password, form.password.data):
-        print("reached login")
-        login_user(user)
-        return redirect(url_for('dashboard'))
-    return render_template('login.html', form=form)
+        user = User.get_by_email(form.email.data)
+        print(f"USER: {user}")
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            print("reached login")
+            login_user(user)
+            token = "loggedIn"; 
+            return jsonify({"token": token, "user": user.to_dict()})
+    return jsonify({'message': 'Invalid credentials'}), 401
 
 # Logout Route
 @app.route('/logout', methods=['GET', 'POST'])
