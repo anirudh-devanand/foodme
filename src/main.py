@@ -236,12 +236,8 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
 
-from flask_cors import CORS
-
 
 app = Flask(__name__)
-CORS(app)
-
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 
 login_manager = LoginManager()
@@ -267,9 +263,10 @@ except Exception as e:
 
 
 class User(UserMixin):
-    def __init__(self, id, username, email, password):
+    def __init__(self, id, fullname, username, email, password):
         # MongoDB provides _id, but we can use it as id in our class
         self.id = str(id)  # Store the MongoDB _id as string, which is usually in ObjectId format
+        self.fullname = fullname
         self.username = username
         self.email = email
         self.password = password
@@ -280,6 +277,7 @@ class User(UserMixin):
             'username': self.username,
             'email': self.email,
             'password': self.password,
+            'fullname': self.fullname
         }
         # MongoDB will automatically assign an _id when inserting the document
         result = mongo.db.users.insert_one(user)
@@ -291,7 +289,7 @@ class User(UserMixin):
         # Use ObjectId to fetch the user by MongoDB's _id
         user_data = mongo.db.users.find_one({"_id": ObjectId(id)})
         if user_data:
-            return User(user_data["_id"], user_data["username"], user_data["email"], user_data["password"])
+            return User(user_data["_id"], user_data["username"], user_data["email"], user_data["password"], user_data["fullname"])
         return None
     
 
@@ -302,7 +300,7 @@ class User(UserMixin):
     def get_by_username(cls, username):
         user = mongo.db.users.find_one({'username': username})
         if user:
-            return cls(id=user['_id'], username=user['username'], email=user['email'], password=user['password'])
+            return cls(id=user['_id'], username=user['username'], email=user['email'], password=user['password'], fullname=user["fullname"])
         return None
     
 # Load the user by user_id
@@ -313,7 +311,7 @@ def load_user(id):
 # Dish class
 class Dish:
     def __init__(self, id, expiry, name, description, price, seller_id, country, seller_name):
-        self.id = id
+        self.id = str(id) 
         self.expiry = expiry
         self.name = name
         self.description = description
@@ -332,11 +330,26 @@ class Dish:
             'country': self.country,
             'seller_name': self.seller_name
         }
-        mongo.db.dishes.insert_one(dish)
+        # MongoDB will automatically assign an _id when inserting the document
+        result = mongo.db.dishes.insert_one(dish)
+        # Update the User object with the MongoDB _id
+        self.id = str(result.inserted_id)
+
+        @staticmethod
+        def get(id):
+        # Use ObjectId to fetch the user by MongoDB's _id
+            item_data = mongo.db.dishes.find_one({"_id": ObjectId(id)})
+            if item_data:
+                return Dish(item_data["_id"], item_data["name"], item_data["description"], item_data["price"], item_data["expiry"],item_data["seller_id"],item_data["seller_name"],item_data["country"] )
+            return None
+        
+        def get_id(self):
+            return self.id
 
 # Registration Form
 class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+    fullname = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Jane Doe"})
     password = PasswordField(validators=[InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
     email = StringField(validators=[InputRequired(), Length(min=8, max=100)], render_kw={"placeholder": "Email"})
     submit = SubmitField('Register')
@@ -355,15 +368,13 @@ class LoginForm(FlaskForm):
 # Registration Route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # return "ok"
     form = RegisterForm()
     if form.validate_on_submit():
-        print("ayaa2!!!!!!!!!")
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash password before saving
-        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data)
+        new_user = User(id=None, username=form.username.data, password=hashed_password, email=form.email.data, fullname=form.fullname)
         new_user.save()
-    return redirect(url_for('login')) # 
-    # return render_template('register.html', form=form)
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
 
 # Login Route
 @app.route('/login', methods=['GET', 'POST'])
@@ -396,6 +407,49 @@ def home():
     return render_template('index.html')
 
 # Seller adds/posts new dish
+@app.route('/updateItem', methods=['POST'])
+@login_required
+def updateItem():
+    data = request.get_json()
+
+    item_name = data['itemData']['name']  # Extract the actual item name
+    item_country = data['itemData']['country']
+    item_description = data['itemData']['description']
+    item_price = data['itemData']['price']
+    item_id = data['itemData']['id']
+    item_expiry = data['itemData']['expiry']
+
+    if not item_name:
+        return jsonify({'error': 'Missing item name'}), 400
+    
+
+    mongo.db.dishes.update_one({'_id' : item_id},{"$set":{'name': item_name,
+            'description': item_description,
+            'price': item_price,
+            'expiry': item_expiry,
+            'country': item_country,}})
+    
+    return jsonify({'message': 'Item updated successfully!', 'item': {'name': item_name, 'expiry': item_expiry}})
+
+@app.route('deleteItem', methods=['POST'])
+@login_required
+def deleteItem():
+    data = request.get_json()
+
+    item_name = data['itemData']['name']
+    item_id = data['itemData']['_id']
+    query = {"_id" : item_id}
+
+    result = mongo.db.dishes.delete_one(query)
+
+    if result.deleted_count > 0:
+        print("Successfully deleted item")
+    else:
+        print("No document deleted")
+
+    return jsonify({'message': 'Item deleted successfully!', 'item': {'name': item_name, '_id': item_id}})
+
+# Seller adds/posts new dish
 @app.route('/addItem', methods=['POST'])
 @login_required
 def addItem():
@@ -414,33 +468,6 @@ def addItem():
     new_dish.save()
 
     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
-
-
-# # Seller adds/posts new dish
-# @app.route('/addItem', methods=['POST'])
-# @login_required
-# def addItem():
-#     data = request.get_json()
-
-#     item_name = data['itemData']['name']  # Extract the actual item name
-#     item_country = data['itemData']['country']
-#     user_id = current_user.id  # Use the logged-in user's ID
-#     user_name = mongo.db.users.find_one({'id': user_id})    
-
-#     if not item_name:
-#         return jsonify({'error': 'Missing item name'}), 400
-
-#     expiry = datetime.now() + timedelta(hours=6)
-#     new_dish = Dish(id=None, expiry=expiry, name=item_name, description='', price=0, seller_name=user_name, seller_id=user_id, country=item_country)
-#     new_dish.save()
-
-#     return jsonify({'message': 'Item added successfully!', 'item': {'name': item_name, 'expiry': expiry}})
-
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
